@@ -8,20 +8,67 @@
     <div class="panel">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <div class="form-group">
-                        <label for="company">Company</label>
-                        <select class="form-control" id="Company" name="Company">
-                            @if (Model != null)
-                            {
-                                foreach (string item in Model.CompanyList)
+                @*<div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group col-lg-4 col-md-4 col-sm-4">*@
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="company">Company</label>
+                            <select class="form-control" id="Company" name="Company">
+                                @if (Model != null)
                                 {
-                                    <option value="@item">@item</option>
+                                    foreach (string item in Model.CompanyList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                            </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="City">City</label>
+                            <select class="form-control" id="City" name="City">
+                                @if (Model != null)
+                                {
+                                    <option value="">---Select City---</option>
+                                    foreach (string cityName in Model.CityList)
+                                    {
+                                        if (cityName == Model.City)
+                                        {
+                                            <option value="@cityName" selected="selected">@cityName </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@cityName">@cityName</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(m => m.City)
+                            </div>
+                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                    <label for="City">Branch Name</label>
+                    <select class="form-control" id="Branch" name="Branch">
+                        @if (Model != null)
+                        {
+                            <option value="">---Select Branch---</option>
+                            foreach (string BranchName in Model.BranchList)
+                            {
+                                if (BranchName == Model.Branch)
+                                {
+                                    <option value="@BranchName" selected="selected">@BranchName </option>
+                                }
+                                else
+                                {
+                                    <option value="@BranchName">@BranchName</option>
                                 }
                             }
-                        </select>
-                    </div>
+
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(m => m.City)
                 </div>
+
+                        @*</div>
+                </div>*@
                 <div class="col-lg-8 col-md-8 col-sm-8">&nbsp;</div>
             </div>
         </div>
@@ -29,7 +76,7 @@
             <div class="panel">
                 <div class="panel-body">
                     <div class="col-lg-1 col-md-1 col-sm-1">
-                        <a href="javascript:submitData('New Office')" class="connectedAppBtn">
+                        <a href="javascript:submitDataNew('New Office')" class="connectedAppBtn">
                             <img src="~/Images/RedButton.png" style="width:50px;height:50px;" />
                         </a>
                     </div>
@@ -60,7 +107,7 @@
                         </a>
                     </div>
                     <div class="col-lg-11 col-md-11 col-sm-11">
-                        <strong style="font-size:16px;">Additional Space in an existing office</strong>
+                        <strong style="font-size:16px;">Change in Existing Lease</strong>
                         <p>Buy/Rent</p>
                     </div>
                 </div>
@@ -80,5 +127,12 @@
 
         url = '@Url.Action("AddBranchOffice", "Home")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);
         window.location.href = url;
+    }
+
+    var urlNew = '/Home/AddNewOffice?';
+    function submitDataNew(selectedMenuItem) {
+
+        urlNew = '@Url.Action("AddNewOffice", "Home")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);
+        window.location.href = urlNew;
     }
 </script>

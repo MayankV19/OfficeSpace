@@ -28,7 +28,9 @@ namespace OfficeSpace.Models
         public string Status { get; set; }
         public string BuisnessType { get; set; }
         [Required(ErrorMessage ="Please select the City from the list")]
-        public string City        { get; set; }       
+        public string City        { get; set; }
+
+        public string Branch { get; set; }
         public string AllocationType { get; set; }
         [Required]
         public string ProposedLocation { get; set; }
@@ -110,11 +112,15 @@ namespace OfficeSpace.Models
 
         public List<string> CompanyList { get; set; }
         public List<string> CityList { get; set; }
+
+        public List<string> BranchList { get; set; }
         public List<UserDataModel> UserDataList { get; set; }       
 
         public void Init(string roleName,string userName = null)
         {
-            GetCompanyList(roleName,userName);  
+            GetCompanyList(roleName,userName);
+            GetCityList();
+            GetBranchList();
         }
 
         public void GetCompanyList(string roleName,string userName)
@@ -171,6 +177,28 @@ namespace OfficeSpace.Models
             }
         }
 
+        public void GetBranchList()
+        {
+            BranchList = new List<string>();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand();
+                command.Connection = connection;
+                command.CommandText = "SELECT distinct OfficeName FROM [FurnishedRentalDetails] ORDER BY OfficeName";
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        BranchList.Add(reader[0].ToString());
+                    }
+                }
+                reader.Close();
+            }
+        }
+
         public void GetUserRequests()
         {
             UserDataList = new List<UserDataModel>();
@@ -220,15 +248,8 @@ namespace OfficeSpace.Models
                     connection.Open();
                     SqlCommand command = new SqlCommand();
                     command.Connection = connection;
-                    command.CommandText = @"INSERT INTO NavigationDetailsNew(Company,MenuSelection,BussinessType,AllocationType,City,LeaseRenewalDate,DateOfRequired,FitOuts
-,ExistingLocation,ProposedLocation,ExistingSignage,ProposedSignage,ExistingEmployee,ProposedEmployee,ExistingSuperBuiltUpArea,ProposedSuperBuiltUpArea,ExistingBuiltUpArea,
-ProposedBuiltupArea,ExistingCarpetArea,ProposedCarpetArea,ExistingRentalArea,ProposedRentalArea,ExistingRentalCost,ProposedRentalCost,ExistingSecurityDeposit,ProposedSecurityDeposit,
-ExistingCarPark,ProposedCarPark,ExistingRequest,ProposedRequest,Remark1,Remark2,Status,CreationDate,LastUpdatedDate,ExistingMonthlyCost,ProposedMonthlyCost,CreatedBy) values (@Company,@MenuSelection,@BussinessType,@AllocationType,@City,@LeaseRenewalDate,@DateOfRequired,@FitOuts
-,@ExistingLocation,@ProposedLocation,@ExistingSignage,@ProposedSignage,@ExistingEmployee,@ProposedEmployee,@ExistingSuperBuiltUpArea,@ProposedSuperBuiltUpArea,@ExistingBuiltUpArea,
-@ProposedBuiltupArea,@ExistingCarpetArea,@ProposedCarpetArea,@ExistingRentalArea,@ProposedRentalArea,@ExistingRentalCost,@ProposedRentalCost,@ExistingSecurityDeposit,@ProposedSecurityDeposit,
-@ExistingCarPark,@ProposedCarPark,@ExistingRequest,@ProposedRequest,@Remark1,@Remark2,@Status,getdate(),getdate(),@ExistingMonthlyCost,@ProposedMonthlyCost,@CreatedBy)
-  SELECT SCOPE_IDENTITY()";
-                                       
+                    command.CommandText = "udp_Store_Post_Navigation";
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@Company", Company );
                     command.Parameters.AddWithValue("@MenuSelection", SelectedMenu );
                     command.Parameters.AddWithValue("@BussinessType", BuisnessType) ;
@@ -266,7 +287,7 @@ ExistingCarPark,ProposedCarPark,ExistingRequest,ProposedRequest,Remark1,Remark2,
                     command.Parameters.AddWithValue("@ProposedMonthlyCost", (Convert.ToInt32(ProposedRentalArea) * Convert.ToInt32(ProposedCostPerSquareFeet)));
                     //command.Parameters.AddWithValue("@ExistingMonthlyCost", ExistingMonthlyCost == null ? string.Empty : ExistingMonthlyCost);
                     //command.Parameters.AddWithValue("@ProposedMonthlyCost", ProposedMonthlyCost == null ? string.Empty : ProposedMonthlyCost);
-                    command.Parameters.AddWithValue("@CreatedBy", CreatedBy == null ? string.Empty : CreatedBy);
+                    command.Parameters.AddWithValue("@LoggedInUser", CreatedBy == null ? string.Empty : CreatedBy);
                     ID = int.Parse(command.ExecuteScalar().ToString());
                   
                 }

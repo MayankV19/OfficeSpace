@@ -192,6 +192,7 @@ namespace OfficeSpace.Models
                 if (Flag == "2")
                 {
                     if (Company == "ALL")
+                     
                     {
                         //command.CommandText = string.Format(query, "WHERE Status NOT IN ('Closed','Disapproved')");
                         command.CommandText = string.Format(query, "WHERE NavigationDetailsNew.Status  IN ('Approved')");
@@ -401,13 +402,9 @@ namespace OfficeSpace.Models
 
                         if (obj.DataType == "Existing")
                         {
-                            command.CommandText = string.Format(@"UPDATE NavigationDetailsNew SET ExistingLocation = @ExistingLocation,ExistingSignage = @ExistingSignage,
-                                                    ExistingEmployee = @ExistingEmployee,ExistingSuperBuiltUpArea = @ExistingSuperBuiltUpArea,
-                                                    ExistingBuiltUpArea = @ExistingBuiltUpArea ,ExistingCarpetArea = @ExistingCarpetArea,
-                                                    ExistingRentalArea = @ExistingRentalArea ,ExistingRentalCost = @ExistingRentalCost,
-                                                    ExistingSecurityDeposit = @ExistingSecurityDeposit ,ExistingCarPark = @ExistingCarPark,
-                                                    Remark1 = @Remark1,LastUpdatedDate=Getdate(),ExistingMonthlyCost=@ExistingMonthlyCost,
-                                                    Status = @Status Where NavigationAutoID = {0}", obj.ID);
+                            command.CommandText = "udp_Store_Put_Existing_Navigation";
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@ID", obj.ID);
                             command.Parameters.AddWithValue("@ExistingLocation", obj.ExistingLocation);
                             command.Parameters.AddWithValue("@ExistingSignage", obj.Signage);
                             command.Parameters.AddWithValue("@ExistingEmployee", obj.NoOfPersons);
@@ -421,19 +418,16 @@ namespace OfficeSpace.Models
                             command.Parameters.AddWithValue("@Remark1", obj.Remarks);
                             command.Parameters.AddWithValue("@ExistingMonthlyCost", obj.ExistingMonthlyCost);
                             command.Parameters.AddWithValue("@Status", status);
-
+                            command.Parameters.AddWithValue("@LoggedInUser", obj.CreatedByName);
+                            
                             command.ExecuteNonQuery();
                             command.Parameters.Clear();
                         }
                         else
                         {
-                            command.CommandText = string.Format(@"UPDATE NavigationDetailsNew SET ProposedLocation = @ProposedLocation, ProposedSignage = @ProposedSignage,
-                            ProposedEmployee = @ProposedEmployee, ProposedSuperBuiltUpArea = @ProposedSuperBuiltUpArea,
-                            ProposedBuiltupArea = @ProposedBuiltupArea, ProposedCarpetArea = @ProposedCarpetArea,
-                            ProposedRentalArea = @ProposedRentalArea, ProposedRentalCost = @ProposedRentalCost,
-                            ProposedSecurityDeposit = @ProposedSecurityDeposit, ProposedCarPark = @ProposedCarPark,
-                            Remark2 = @Remark2,LastUpdatedDate=getdate(),ProposedMonthlyCost=@ProposedMonthlyCost,
-                            Status = @Status Where NavigationAutoID = {0}", obj.ID);
+                            command.CommandText = "udp_Store_Put_Proposed_Navigation";
+                            command.CommandType = System.Data.CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@ID", obj.ID);
                             command.Parameters.AddWithValue("@ProposedLocation", obj.ProposedLocation);
                             command.Parameters.AddWithValue("@ProposedSignage", obj.ProposedSignage);
                             command.Parameters.AddWithValue("@ProposedEmployee", obj.ProposedNoOfPersons);
@@ -447,10 +441,62 @@ namespace OfficeSpace.Models
                             command.Parameters.AddWithValue("@Remark2", obj.ProposedRemarks);
                             command.Parameters.AddWithValue("@ProposedMonthlyCost", obj.ProposedMonthlyCost);
                             command.Parameters.AddWithValue("@Status", status);
-
                             command.ExecuteNonQuery();
                             command.Parameters.Clear();
                         }
+
+                        //if (obj.DataType == "Existing")
+                        //{
+                        //    command.CommandText = string.Format(@"UPDATE NavigationDetailsNew SET ExistingLocation = @ExistingLocation,ExistingSignage = @ExistingSignage,
+                        //                            ExistingEmployee = @ExistingEmployee,ExistingSuperBuiltUpArea = @ExistingSuperBuiltUpArea,
+                        //                            ExistingBuiltUpArea = @ExistingBuiltUpArea ,ExistingCarpetArea = @ExistingCarpetArea,
+                        //                            ExistingRentalArea = @ExistingRentalArea ,ExistingRentalCost = @ExistingRentalCost,
+                        //                            ExistingSecurityDeposit = @ExistingSecurityDeposit ,ExistingCarPark = @ExistingCarPark,
+                        //                            Remark1 = @Remark1,LastUpdatedDate=Getdate(),ExistingMonthlyCost=@ExistingMonthlyCost,
+                        //                            Status = @Status Where NavigationAutoID = {0}", obj.ID);
+                        //    command.Parameters.AddWithValue("@ExistingLocation", obj.ExistingLocation);
+                        //    command.Parameters.AddWithValue("@ExistingSignage", obj.Signage);
+                        //    command.Parameters.AddWithValue("@ExistingEmployee", obj.NoOfPersons);
+                        //    command.Parameters.AddWithValue("@ExistingSuperBuiltUpArea", obj.SuperBuiltUp);
+                        //    command.Parameters.AddWithValue("@ExistingBuiltUpArea", obj.BuiltUp);
+                        //    command.Parameters.AddWithValue("@ExistingCarpetArea", obj.CarpetArea);
+                        //    command.Parameters.AddWithValue("@ExistingRentalArea", obj.RentalArea);
+                        //    command.Parameters.AddWithValue("@ExistingRentalCost", obj.CostPerSquareFeet);
+                        //    command.Parameters.AddWithValue("@ExistingSecurityDeposit", obj.SecurityDeposit);
+                        //    command.Parameters.AddWithValue("@ExistingCarPark", obj.CarPark);
+                        //    command.Parameters.AddWithValue("@Remark1", obj.Remarks);
+                        //    command.Parameters.AddWithValue("@ExistingMonthlyCost", obj.ExistingMonthlyCost);
+                        //    command.Parameters.AddWithValue("@Status", status);
+
+                        //    command.ExecuteNonQuery();
+                        //    command.Parameters.Clear();
+                        //}
+                        //else
+                        //{
+                        //    command.CommandText = string.Format(@"UPDATE NavigationDetailsNew SET ProposedLocation = @ProposedLocation, ProposedSignage = @ProposedSignage,
+                        //    ProposedEmployee = @ProposedEmployee, ProposedSuperBuiltUpArea = @ProposedSuperBuiltUpArea,
+                        //    ProposedBuiltupArea = @ProposedBuiltupArea, ProposedCarpetArea = @ProposedCarpetArea,
+                        //    ProposedRentalArea = @ProposedRentalArea, ProposedRentalCost = @ProposedRentalCost,
+                        //    ProposedSecurityDeposit = @ProposedSecurityDeposit, ProposedCarPark = @ProposedCarPark,
+                        //    Remark2 = @Remark2,LastUpdatedDate=getdate(),ProposedMonthlyCost=@ProposedMonthlyCost,
+                        //    Status = @Status Where NavigationAutoID = {0}", obj.ID);
+                        //    command.Parameters.AddWithValue("@ProposedLocation", obj.ProposedLocation);
+                        //    command.Parameters.AddWithValue("@ProposedSignage", obj.ProposedSignage);
+                        //    command.Parameters.AddWithValue("@ProposedEmployee", obj.ProposedNoOfPersons);
+                        //    command.Parameters.AddWithValue("@ProposedSuperBuiltUpArea", obj.ProposedSuperBuiltUp);
+                        //    command.Parameters.AddWithValue("@ProposedBuiltupArea", obj.ProposedBuiltUp);
+                        //    command.Parameters.AddWithValue("@ProposedCarpetArea", obj.ProposedCarpetArea);
+                        //    command.Parameters.AddWithValue("@ProposedRentalArea", obj.ProposedRentalArea);
+                        //    command.Parameters.AddWithValue("@ProposedRentalCost", obj.ProposedCostPerSquareFeet);
+                        //    command.Parameters.AddWithValue("@ProposedSecurityDeposit", obj.ProposedSecurityDeposit);
+                        //    command.Parameters.AddWithValue("@ProposedCarPark", obj.ProposedCarPark);
+                        //    command.Parameters.AddWithValue("@Remark2", obj.ProposedRemarks);
+                        //    command.Parameters.AddWithValue("@ProposedMonthlyCost", obj.ProposedMonthlyCost);
+                        //    command.Parameters.AddWithValue("@Status", status);
+
+                        //    command.ExecuteNonQuery();
+                        //    command.Parameters.Clear();
+                        //}
                         EmailManager emailManager = new EmailManager();
 
                         if (obj.IsApproved)
