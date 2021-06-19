@@ -31,7 +31,7 @@ namespace OfficeSpace.Models
                     SET @CompanyName=(SELECT companyName FROM UserDetails WHERE UserName = '{0}')
                     SELECT * FROM (
                     SELECT 'Existing' as 'RequestType',NavigationDetailsNew.NavigationAutoID,convert(varchar(10), ROW_NUMBER() OVER (ORDER BY NavigationDetailsNew.NavigationAutoID)) +'-A' as RequestId ,case when NavigationDetailsNew.Company='VProtect' then 'VProtect'  when NavigationDetailsNew.company='SIS Cash services Pvt ltd' then 'SIS Cash'  
- when NavigationDetailsNew.company='Rare Hospitality and Services Pvt. Ltd' then 'Rare Hospitality'  
+when NavigationDetailsNew.company='Rare Hospitality and Services Pvt. Ltd' then 'Rare Hospitality'  
  when NavigationDetailsNew.company='SIS Prosegur Holdings' then 'SIS Prosegur' 
   when NavigationDetailsNew.company='SIS INDIA- MG' then 'SIS MG' 
    when NavigationDetailsNew.company='SLV Securities Services Pvt. Ltd.' then 'SLV' 

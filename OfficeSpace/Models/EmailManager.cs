@@ -86,7 +86,7 @@ namespace OfficeSpace.Models
 
             SendEmail(subject, body, recipients, null, isBodyHtml);
         }
-
+     //   public void EmailIntitate(NavigationModel model, bool IsReqMerged, string name)
         public void EmailIntitate(NavigationModel model, bool IsReqMerged,string name)
         {
             string httpPort = ConfigurationManager.AppSettings["HttpPort"];
@@ -256,7 +256,7 @@ namespace OfficeSpace.Models
                 throw ex;
             }
         }
-
+   
         private void GetOtherData(NavigationModel model)
         {
           
@@ -457,7 +457,7 @@ WHERE [NavigationAutoID] =" + ID;
                 throw ex;
             }
         }
-
+     
         private string GetMailBody(NavigationModel model)
         {
            

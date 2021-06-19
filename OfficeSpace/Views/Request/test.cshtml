@@ -1,0 +1,526 @@
+﻿@model IEnumerable<OfficeSpace.Models.RequestModel>
+
+@{
+    ViewBag.Title = "test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>test</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DataType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequestID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BussinessType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MenuSelection)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Company)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Region)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Branch)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BuisnessType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AllocationType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fitouts)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateFromWhich)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedSignage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedNoOfPersons)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedSuperBuiltUp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedBuiltUp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedCarpetArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedRentalArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedCostPerSquareFeet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedSecurityDeposit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedCarPark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedRemarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LoggedInUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CalcMonthlyCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedCalcMonthlyCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeaseStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingLeaseStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SelectedMenu)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeaseStartAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RentalEscallation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EscallationPeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeasePeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdvanceRental)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmtHoldWithOwner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NoticePeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PresentMonthlyRenatlCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PresentMonthlyBilling)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RentalCostPer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonthlyMaintenenceCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AvgMaintenanceCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.monthlyElectricCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonthlyOtherCosts)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalMonthlyRenatlCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OfficeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeaseClosureDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProposedDateofRenewal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Signage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NoOfPersons)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SuperBuiltUp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BuiltUp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CarpetArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RentalArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CostPerSquareFeet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SecurityDeposit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingLeaseStartAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingRentalEscallation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingEscallationPeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingLeasePeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingLeaseClosureDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingAdvanceRental)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingAmtHoldWithOwner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingNoticePeriod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingPresentMonthlyRenatlCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingPresentMonthlyBilling)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingRentalCostPer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingMonthlyMaintenenceCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingAvgMaintenanceCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingmonthlyElectricCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingMonthlyOtherCosts)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingTotalMonthlyRenatlCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingMobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingOfficeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExistingCarPark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RequestID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreationDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BussinessType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MenuSelection)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Region)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Branch)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BuisnessType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AllocationType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fitouts)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateFromWhich)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedSignage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedNoOfPersons)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedSuperBuiltUp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedBuiltUp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedCarpetArea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedRentalArea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedCostPerSquareFeet)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedSecurityDeposit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedCarPark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedRemarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoggedInUser)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CalcMonthlyCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedCalcMonthlyCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeaseStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingLeaseStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SelectedMenu)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeaseStartAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RentalEscallation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EscallationPeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeasePeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdvanceRental)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmtHoldWithOwner)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NoticePeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PresentMonthlyRenatlCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PresentMonthlyBilling)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RentalCostPer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MonthlyMaintenenceCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AvgMaintenanceCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.monthlyElectricCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MonthlyOtherCosts)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalMonthlyRenatlCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mobile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OfficeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeaseClosureDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProposedDateofRenewal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Signage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NoOfPersons)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SuperBuiltUp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BuiltUp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarpetArea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RentalArea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CostPerSquareFeet)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SecurityDeposit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingLeaseStartAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingRentalEscallation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingEscallationPeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingLeasePeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingLeaseClosureDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingAdvanceRental)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingAmtHoldWithOwner)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingNoticePeriod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingPresentMonthlyRenatlCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingPresentMonthlyBilling)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingRentalCostPer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingMonthlyMaintenenceCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingAvgMaintenanceCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingmonthlyElectricCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingMonthlyOtherCosts)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingTotalMonthlyRenatlCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingMobile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingOfficeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExistingCarPark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

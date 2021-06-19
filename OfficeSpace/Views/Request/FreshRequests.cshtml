@@ -1,0 +1,364 @@
+﻿@{
+    string array = "[6, 12, ALL]";
+
+}
+@model OfficeSpace.Models.RequestModel
+@{
+    ViewBag.Title = "FreshRequests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
+<link href="~/ContentOld/Theme/Spinner.css" rel="stylesheet" />
+<style>
+    .fixed-table-toolbar .columns-right {
+        margin-top: 0px !important;
+    }
+
+    .fixed-table-toolbar .search {
+        margin-top: 0px !important;
+    }
+
+    .fixed-table-toolbar .columns label {
+        padding: 0px !important;
+        padding-left: 10px !important;
+    }
+
+    table tr {
+        cursor: pointer;
+    }
+
+    table td {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+</style>
+
+
+<div id="page-wrapper">
+    <div class="panel">
+        <div>
+            <div class="panel-heading red-background-colour">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <h4><strong>Fresh Requests </strong></h4>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-8"></div>
+                </div>
+            </div>
+            @*<div class="panel-body tableLoader" style="text-align:left;">*@
+
+            @using (Html.BeginForm("SearchFreshRequests", "Request", FormMethod.Post, new { id = "FurnishedRentals", @class = "bs-example " }))
+            {
+               
+
+                @*<div class="table-responsive" style="overflow-y:scroll;">*@
+                <table id="tblRentalDetails" class="table table-striped table-bordered table-sm " cellspacing="0" width="100%"
+                       data-toggle="table"
+                       data-toolbar="#toolbar"
+                       data-search="false"
+                       data-show-columns="false"
+                       data-minimum-count-columns="2"
+                       data-pagination="true"
+                       data-id-field="ID"
+                       data-page-size="@ViewBag.pageSize"
+                       data-page-list="@array"
+                       data-show-footer="false"
+                       data-row-style="rowStyle"
+                       @*data-fixed-columns="true"
+                                   data-fixed-columns-left="4"
+                                   data-fixed-columns-right="0"*@>
+                    <thead>
+                        <tr class="table-heading-font">
+                            <th data-sortable="false">SL. No.</th>
+                            <th data-sortable="false">Creation Date</th>
+                            <th data-sortable="false">Company</th>
+                            <th data-sortable="false">City</th>
+                            <th data-sortable="false">Request Type</th>
+                            <th data-sortable="false">Bussiness Type</th>
+                            <th data-sortable="false"> Allocation Type  </th>
+                            <th data-sortable="false">
+                                Fitouts / Bareshell
+                            </th>
+                            <th data-sortable="false">Data Type</th>
+                            <th data-sortable="false">Office Name</th>
+                            <th data-sortable="false">
+                                Office Location             </th>
+                           
+
+                            <th data-sortable="false">
+                                Lease Start Date
+                            </th>
+                            <th data-sortable="false">
+                                Lease Starting Rental Amount (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Rental Escalation 
+                            </th>
+                            <th data-sortable="false" style="text-wrap:none;width:50px">
+                                Escalation Period
+                            </th>
+                            <th data-sortable="false">
+                                Lease Period (In Years)
+                            </th>
+                            @*<th data-sortable="false">
+                                Lease Closure Date
+                            </th>*@
+                          
+                            <th data-sortable="false">
+                                Advance Rental Paid (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Total Amount onhold with owner
+                            </th>
+                            
+                           
+                            <th data-sortable="false">
+                                Notice Period (In Months)
+                            </th>
+                            <th data-sortable="false">
+                                Signage covering Roads
+                            </th>
+                            <th data-sortable="false">
+                                Number of Employee
+                            </th>
+                            <th data-sortable="false">
+                                Super BuiltUp Area (Sq.Ft.)
+                            </th>
+                            <th data-sortable="false">
+                                BuiltUp Area (Sq.Ft.)
+                            </th>
+                            <th data-sortable="false">
+                                Carpet Area (Sq.Ft.)
+                            </th>
+                            <th data-sortable="false">
+                                Rental Area (Sq.Ft.)
+                            </th>
+                        
+                            <th data-sortable="false">
+                                 Rental Cost (INR/ Sq.Ft)
+                            </th>
+
+                            <th data-sortable="false">
+                                Security Deposit  (INR)
+                            </th>
+
+                            <th data-sortable="false">
+                                Present Monthly Rental Cost (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Present Monthly Billing (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Rental Cost % to Billing
+                            </th>
+                            <th data-sortable="false">
+                                 Monthly Maintenance Cost (INR)
+                            </th>
+                            <th data-sortable="false">
+                                 Avg Monthly Maintenance Cost (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Monthly Electricity Cost(INR)
+                            </th>
+                            <th data-sortable="false">
+                                Monthly All_other Costs(INR)
+                            </th>
+                            <th data-sortable="false">
+                                Total_Monthly Rental Costs (INR)
+                            </th>
+                            <th data-sortable="false">
+                                Number of_Car Parking
+                            </th>
+
+                            <th data-sortable="false">
+                                Name
+                            </th>
+                            <th data-sortable="false">
+                                Email
+                            </th>
+                            <th data-sortable="false">
+                                Mobile
+                            </th>
+                            <th data-sortable="false">
+                                Remarks
+                            </th>
+                            
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model.FurnishedDataList)
+                        {
+                            var indexing = Model.FurnishedDataList.IndexOf(detail);
+
+                            <tr>
+                                 @Html.HiddenFor(m => m.FurnishedDataList[indexing].ID)
+                                <td> @detail.RequestID </td>
+                                <td> @detail.CreationDate </td>
+                                <td> @detail.Company </td>
+                                <td> @detail.City   </td>
+                                <td> @detail.SelectedMenu   </td>
+                                <td> @detail.BuisnessType  </td>
+                                <td> @detail.AllocationType  </td>
+                                <td> @detail.Fitouts   </td>  
+                                <td> @detail.DataType   </td>      
+                                      
+                                @if (detail.DataType == "Existing")
+                                {
+                                    <td> @detail.ExistingOfficeName  </td>
+                                    <td > @detail.ExistingLocation  </td>
+                                    <td> @detail.ExistingLeaseStartDate  </td>
+                                    <td> @detail.ExistingLeaseStartAmount </td>
+                                    <td> @detail.ExistingRentalEscallation </td>
+                                    <td> @detail.ExistingEscallationPeriod </td>
+                                    <td> @detail.ExistingLeasePeriod   </td>
+                                    @*<td> @detail.ExistingLeaseClosureDate   </td>*@
+                                    <td> @detail.ExistingAdvanceRental </td>
+                                    <td> @detail.ExistingAmtHoldWithOwner </td>
+                                    <td> @detail.ExistingNoticePeriod  </td>
+                                    <td> @detail.Signage  </td>
+                                    <td> @detail.NoOfPersons  </td>
+                                    <td> @detail.SuperBuiltUp  </td>
+                                    <td> @detail.BuiltUp </td>
+                                    <td> @detail.CarpetArea </td>
+                                    <td> @detail.RentalArea </td>
+                                    <td> @detail.CalcMonthlyCost   </td>
+                                    <td> @detail.SecurityDeposit  </td>
+                                    <td> @detail.ExistingPresentMonthlyRenatlCost   </td>
+                                    <td> @detail.ExistingPresentMonthlyBilling   </td>
+                                    <td> @detail.ExistingRentalCostPer </td>                                  
+                                    <td> @detail.ExistingMonthlyMaintenenceCost   </td>
+                                    <td> @detail.ExistingAvgMaintenanceCost </td>
+                                    <td> @detail.ExistingmonthlyElectricCost  </td>
+                                    <td> @detail.ExistingMonthlyOtherCosts </td>
+                                    <td> @detail.ExistingTotalMonthlyRenatlCost  </td>
+                                    <td> @detail.ExistingCarPark </td>
+                                    <td> @detail.ExistingName  </td>
+                                    <td> @detail.ExistingEmail  </td>
+                                    <td> @detail.ExistingMobile </td>
+                                    <td> @detail.Remarks </td>
+                                }
+                                else
+                                {
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="OfficeName_@indexing" name="FurnishedDataList[@indexing].OfficeName" value="@detail.OfficeName" maxlength="100" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="proposedlocation_@indexing" name="FurnishedDataList[@indexing].ProposedLocation" value="@detail.ProposedLocation" maxlength="100" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="LeaseStartDate_@indexing" name="FurnishedDataList[@indexing].LeaseStartDate" value="@detail.LeaseStartDate" maxlength="100" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="LeaseStartAmount_@indexing" name="FurnishedDataList[@indexing].LeaseStartAmount" value="@detail.LeaseStartAmount" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="RentalEscallation_@indexing" name="FurnishedDataList[@indexing].RentalEscallation" value="@detail.RentalEscallation" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="EscallationPeriod_@indexing" name="FurnishedDataList[@indexing].EscallationPeriod" value="@detail.EscallationPeriod" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="LeasePeriod_@indexing" name="FurnishedDataList[@indexing].LeasePeriod" value="@detail.LeasePeriod" maxlength="10" /></td>
+                                            @*<td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="LeaseClosureDate_@indexing" name="FurnishedDataList[@indexing].LeaseClosureDate" value="@detail.LeaseClosureDate" maxlength="11" /></td>*@
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="AdvanceRental_@indexing" name="FurnishedDataList[@indexing].AdvanceRental" value="@detail.AdvanceRental" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="AmtHoldWithOwner_@indexing" name="FurnishedDataList[@indexing].AmtHoldWithOwner" value="@detail.AmtHoldWithOwner" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="NoticePeriod_@indexing" name="FurnishedDataList[@indexing].NoticePeriod" value="@detail.NoticePeriod" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedSignage_@indexing" name="FurnishedDataList[@indexing].ProposedSignage" value="@detail.ProposedSignage" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedNoOfPersons_@indexing" name="FurnishedDataList[@indexing].ProposedNoOfPersons" value="@detail.ProposedNoOfPersons" maxlength="800" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedSuperBuiltUp_@indexing" name="FurnishedDataList[@indexing].ProposedSuperBuiltUp" value="@detail.ProposedSuperBuiltUp" maxlength="10" /></td>
+
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="proposedbuiltup_@indexing" name="FurnishedDataList[@indexing].ProposedBuiltUp" value="@detail.ProposedBuiltUp" maxlength="10" type /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="proposedcarpetarea_@indexing" name="FurnishedDataList[@indexing].ProposedCarpetArea" value="@detail.ProposedCarpetArea" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="proposedrentalarea_@indexing" name="FurnishedDataList[@indexing].ProposedRentalArea" value="@detail.ProposedRentalArea" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedCalcMonthlyCost_@indexing" name="FurnishedDataList[@indexing].ProposedCalcMonthlyCost" value="@detail.ProposedCalcMonthlyCost" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedSecurityDeposit_@indexing" name="FurnishedDataList[@indexing].ProposedSecurityDeposit" value="@detail.ProposedSecurityDeposit" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="PresentMonthlyRenatlCost_@indexing" name="FurnishedDataList[@indexing].PresentMonthlyRenatlCost" value="@detail.PresentMonthlyRenatlCost" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="PresentMonthlyBilling_@indexing" name="FurnishedDataList[@indexing].PresentMonthlyBilling" value="@detail.PresentMonthlyBilling" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="RentalCostPer_@indexing" name="FurnishedDataList[@indexing].RentalCostPer" value="@detail.RentalCostPer" maxlength="800" /></td>
+
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="MonthlyMaintenenceCost_@indexing" name="FurnishedDataList[@indexing].MonthlyMaintenenceCost" value="@detail.MonthlyMaintenenceCost" maxlength="100" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="AvgMaintenanceCost_@indexing" name="FurnishedDataList[@indexing].AvgMaintenanceCost" value="@detail.AvgMaintenanceCost" maxlength="100" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="monthlyElectricCost_@indexing" name="FurnishedDataList[@indexing].monthlyElectricCost" value="@detail.monthlyElectricCost" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="MonthlyOtherCosts_@indexing" name="FurnishedDataList[@indexing].MonthlyOtherCosts" value="@detail.MonthlyOtherCosts" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="TotalMonthlyRenatlCost_@indexing" name="FurnishedDataList[@indexing].TotalMonthlyRenatlCost" value="@detail.TotalMonthlyRenatlCost" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedCarPark_@indexing" name="FurnishedDataList[@indexing].ProposedCarPark" value="@detail.ProposedCarPark" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="Name_@indexing" name="FurnishedDataList[@indexing].Name" value="@detail.Name" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="Email_@indexing" name="FurnishedDataList[@indexing].Email" value="@detail.Email" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="Mobile_@indexing" name="FurnishedDataList[@indexing].Mobile" value="@detail.Mobile" maxlength="10" /></td>
+                                            <td> <input type="text" class="form-control form-control-sm input-md makereadonly" id="ProposedRemarks_@indexing" name="FurnishedDataList[@indexing].ProposedRemarks" value="@detail.ProposedRemarks" maxlength="10" /></td>
+
+                                }
+
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                @*</div>*@
+
+                <div class="row" style="margin-left:10px;">
+                    @*<div class="form-group col-lg-3 col-md-3 col-sm-3">
+        <label for="SelectedStatus">Select Status to Update</label>
+        <select class="form-control" id="SelectedStatus" name="SelectedStatus">
+
+            <option value="Initiated">Initiated</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+
+    </div>*@
+                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                        <button type="submit" name="Submit" value="Initiated" class="btn btn-primary" style="margin-top:24px"><i class="fa fa-check-circle">&nbsp;</i>&nbsp;Initiate Request</button>
+
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                        <button type="submit" name="Submit" value="Rejected" class="btn btn-primary" style="margin-top:24px"><i class="fa fa-ban">&nbsp;</i>&nbsp;Reject Request</button>
+
+                    </div>
+
+                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                        <button type="submit" name="Submit" value="Reviewed" class="btn btn-primary" style="margin-top:24px"><i class="fa fa-repeat">&nbsp;</i>&nbsp;Review Request</button>
+
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                        <button type="submit"  class="btn btn-primary" name="Submit" value="UpdateData" style="margin-top:24px"><i class="fa fa-pencil">&nbsp;</i>&nbsp;Update Request Data</button>
+                        
+                    </div>
+                    
+                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                        <button type="submit"  class="btn btn-primary" value="Back" name="Submit" style="margin-top:24px"><i class="fa fa-backward">&nbsp;</i>&nbsp;Back to list</button>
+
+                    </div>
+
+                </div>
+
+
+
+                    }
+                    @*</div>*@
+                </div>
+    </div>
+    @*</div>*@
+
+
+    <script src="~/Scripts/bootstrap/bootstrap-table.min.js"></script>
+    <script type="text/javascript">
+
+
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
+        $("#FurnishedDataList[1].LeaseStartDate").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#FurnishedDataList[1].LeaseStartDate').datepicker().on("input change", function (e) {
+            $('#FurnishedDataList[1].LeaseStartDate').val(e.target.value);
+        });
+
+        $("#createform").submit(function () {
+            $('#submitBtn').prop('disbaled',true).text('Saving...');
+            return true; // return false to cancel form action
+        });
+    });
+
+
+
+    //function DisplayProgressMessage(ctl, msg) {
+    //    $(ctl).prop("disable
+
+
+
+
+
+

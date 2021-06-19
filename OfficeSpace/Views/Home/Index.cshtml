@@ -3,7 +3,9 @@
     ViewBag.Title = "Index";
 }
 
-
+<script src="~/Scripts/Home.js"></script>
+@using (Html.BeginForm("Parse", "Request", FormMethod.Post,new {id="Home" }))
+{
 <div id="page-wrapper">
     <div class="panel">
         <div class="panel-heading">
@@ -15,6 +17,7 @@
                             <select class="form-control" id="Company" name="Company">
                                 @if (Model != null)
                                 {
+                                <option value="0">---Select Company---</option>
                                     foreach (string item in Model.CompanyList)
                                     {
                                         <option value="@item">@item</option>
@@ -23,11 +26,17 @@
                             </select>
                             </div>
                         <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                            <label for="City">City</label>
-                            <select class="form-control" id="City" name="City">
-                                @if (Model != null)
+                            <label for="Region">Region</label>
+                            <select class="form-control" id="Region" name="Region">
+                                <option value="0">---Select Region---</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                @*@if (Model != null)
                                 {
-                                    <option value="">---Select City---</option>
+                                    <option value="0">---Select City---</option>
                                     foreach (string cityName in Model.CityList)
                                     {
                                         if (cityName == Model.City)
@@ -40,16 +49,20 @@
                                         }
                                     }
 
-                                }
+                                }*@
                             </select>
-                            @Html.ValidationMessageFor(m => m.City)
+                        
                             </div>
                 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                    <label for="City">Branch Name</label>
+                    @*@Html.Label("Select Branch Name")
+                    @Html.DropDownListFor(model=>model.Branch,ViewBag.BranchList as SelectList,"Select Branch",new { @class="form-control"})*@
+                    
+                                        <label for="Branch">Branch </label>
                     <select class="form-control" id="Branch" name="Branch">
                         @if (Model != null)
                         {
-                            <option value="">---Select Branch---</option>
+                            <option value="0">---Select Branch---</option>
+                            <option value="New">New Branch</option>
                             foreach (string BranchName in Model.BranchList)
                             {
                                 if (BranchName == Model.Branch)
@@ -73,6 +86,7 @@
             </div>
         </div>
         <div class="panel-body">
+
             <div class="panel">
                 <div class="panel-body">
                     <div class="col-lg-1 col-md-1 col-sm-1">
@@ -86,6 +100,8 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="panel">
                 <div class="panel-body">
                     <div class="col-lg-1 col-md-1 col-sm-1">
@@ -99,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel">
+            @*<div class="panel">
                 <div class="panel-body">
                     <div class="col-lg-1 col-md-1 col-sm-1">
                         <a href="javascript:submitData('Additional Space')" class="connectedAppBtn">
@@ -111,28 +127,34 @@
                         <p>Buy/Rent</p>
                     </div>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>
-
+}
 <script type="text/javascript">
     $(document).ready(function () {
         activeSideNav('createrequest');
     });
 
 
-    var url = '/Home/AddBranchOffice?';
+   // var url = '/Home/AddBranchOffice?';
     function submitData(selectedMenuItem) {
-
-        url = '@Url.Action("AddBranchOffice", "Home")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);
-        window.location.href = url;
+        if( ValidateExistingRequest())
+        {
+            $("#Home").submit();
+        }
+        @*url = '@Url.Action("AddBranchOffice", "Home")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);
+        window.location.href = url;*@
     }
 
-    var urlNew = '/Home/AddNewOffice?';
+    //var urlNew = '/Request/NewRequest?';
     function submitDataNew(selectedMenuItem) {
-
-        urlNew = '@Url.Action("AddNewOffice", "Home")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);
-        window.location.href = urlNew;
+     
+       @*urlNew = '@Url.Action("NewRequest", "Request")?companyName=' + encodeURIComponent(document.getElementById("Company").value) + '&selectedMenu=' + encodeURIComponent(selectedMenuItem);*@
+        //window.location.href = urlNew;
+        if (ValidateNewRequest()) {
+            $("#Home").submit();
+        }
     }
 </script>

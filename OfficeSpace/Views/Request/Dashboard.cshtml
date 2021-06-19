@@ -1,0 +1,331 @@
+﻿@{
+    string array = "[10, 20, ALL]";
+
+}
+@model OfficeSpace.Models.RequestViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .validationError {
+        font-size: 14px;
+        color: #ff0000;
+    }
+
+    span.field-validation-error {
+        color: red;
+    }
+
+    .submit-progress {
+        padding-top: 2em;
+        width: 23em;
+        margin-left: -11.5em;
+    }
+
+        .submit-progress i {
+            margin-right: 0.5em;
+        }
+</style>
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" temp_href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+<script src="http://code.jquery.com/jquery-1.8.3.js" temp_src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<link href="~/ContentOld/Spinner.css" rel="stylesheet" />
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js" temp_src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#SuperBuiltUpArea").tooltip({ track: true });
+        $("#BuiltUpArea").tooltip({ track: true });
+        $("#CarpetArea").tooltip({ track: true });
+
+    });
+
+</script>
+@*<script>
+        function DisplayProgressMessage(ctl, msg) {
+            $(ctl).prop("disabled", true);
+            $(ctl).text(msg);
+            return true;
+        }
+    </script>*@
+<script>
+    function DisplayProgressMessage(ctl, msg) {
+        $(ctl).prop("disabled", true).text(msg);
+        $("body").addClass("submit-progress-bg");
+        // Wrap in setTimeout so the UI
+        // can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("hidden");
+        }, 1);
+        return true;
+    }
+</script>
+
+<div id="page-wrapper">
+    <div class="panel" style="overflow:scroll;height:650px;">
+        <div class="panel-heading red-background-colour">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <h4><strong>Approval Dashboard</strong></h4>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">&nbsp;</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("SearchApprovalRequests", "Request", FormMethod.Post, new { @class = "form-font", id = "createform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="company">Select Company</label>
+                            <select class="form-control" id="Company" name="Company">
+                                @if (Model != null)
+                                {
+                                    <option value="All">---ALL---</option>
+                                    foreach (string item in Model.SearchParam.CompanyList)
+                                    {
+                                        if (item == Model.SearchParam.Company)
+                                        {
+                                            <option value="@item" selected="selected">@item </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(m => m.SearchParam.Company)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="">From Date</label>
+                            @Html.TextBoxFor(m => m.SearchParam.FromDate, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "FromDate", @readonly = "readonly", placeholder = "From Date" })
+                            @Html.ValidationMessageFor(m => m.SearchParam.FromDate)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="">To Date</label>
+                            @Html.TextBoxFor(m => m.SearchParam.ToDate, new { value = "", @class = "form-control form-control-sm input-md", id = "ToDate", @readonly = "readonly", placeholder = "To Date" })
+                            @Html.ValidationMessageFor(m => m.SearchParam.ToDate)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="City">Select City</label>
+                 <select class="form-control" id="City" name="City">
+                                @if (Model != null)
+                                {
+                                    <option value="All">---ALL---</option>
+                                    foreach (string cityName in Model.SearchParam.CityList)
+                                    {
+                                        if (cityName == Model.SearchParam.City)
+                                        {
+                                            <option value="@cityName" selected="selected">@cityName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@cityName">@cityName</option>
+                                        }
+
+
+                                    }
+
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(m => m.SearchParam.City)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="Status">Select Status</label>
+                            <select class="form-control" id="Status" name="Status">
+
+                                @*<option value="All">---ALL---</option>
+                                <option value="Fresh">Fresh</option>
+                                <option value="Initiated">Initiated</option>
+                                <option value="Identified">Identified</option>
+                                <option value="Approved">Approved</option>*@
+
+                                @if (Model != null)
+                                {
+                                  
+                                    foreach (string Status in Model.SearchParam.StatusList)
+                                    {
+
+                                        if (Status == Model.SearchParam.Status)
+                                        {
+                                            <option value="@Status" selected="selected">@Status</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@Status">@Status</option>
+                                        }
+
+
+                                    }
+
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(m => m.SearchParam.Status)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                          
+                            <button type="submit" id="submitBtn" class="btn btn-primary" style="margin-top:24px"><i class="fa fa-check-circle">&nbsp;</i>Search Requests</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                if (ViewBag.ShowDiv)
+                {
+                <div class="table-responsive" style="overflow-y:scroll; height:500px" >
+        
+                    <table id="table" class="boot-table table-striped"
+                           data-toggle="table"
+                           data-toolbar="#toolbar"
+                           data-search="true"
+                           data-show-columns="true"
+                           data-minimum-count-columns="2"
+                           data-pagination="true"
+                           data-id-field="ID"
+                           data-page-size="@ViewBag.pageSize"
+                           data-page-list="@array"
+                           data-show-footer="false"
+                           data-row-style="rowStyle">
+                        <thead>
+                            <tr class="table-heading-font">
+                                <th data-sortable="true" style="width:50px" >S.N.</th>
+                                <th data-sortable="true" style="width:120px" >CreationDate</th>
+                                <th data-sortable="true" style="width:100px">Company</th>
+                                <th data-sortable="true" style="width:100px">City</th>
+                                <th data-sortable="true" style="width:100px" >B.O. /R.O.</th>
+                                <th data-sortable="true" style="width:120px">Request Type</th>
+                                <th data-sortable="true" style="width:100px">Status</th>
+                                <th data-sortable="true" style="width:220px">Office Name</th>
+                                <th data-sortable="true" style="width:220px">Office Address</th>
+                                <th data-sortable="true" style="width:100px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         @if (Model.ApprovalRequests.Count() > 0)
+                         {
+                            foreach (var detail in Model.ApprovalRequests)
+                            {
+                                var indexing = Model.ApprovalRequests.IndexOf(detail);
+                               
+                                <tr>
+                                    <td>
+                                        <input type="hidden" id="ID_@indexing" name="ApprovalRequests[@indexing].ID" value="@detail.ID" />
+                                        @Html.HiddenFor(m => m.ApprovalRequests[indexing].ID)
+                                        @Html.HiddenFor(m => m.ApprovalRequests[indexing].Status)
+
+                                        @detail.RequestID
+                                    </td>
+                                    <td> @detail.CreationDate </td>
+                                    <td> @detail.Company   </td>
+                                    <td> @detail.City </td>
+                                    <td> @detail.BussinessType </td>
+                                    <td> @detail.MenuSelection </td>
+                                    <td> @detail.Status  </td>
+                                    <td> @detail.OfficeName  </td>
+                                    <td> @detail.ProposedLocation  </td>
+                                    <td>
+                                        @if (detail.Status == "Fresh")
+                                        {
+                                     @Html.ActionLink("View Details", "FreshRequests", new { RequestId = @detail.ID      })
+                                        }
+                                    @if (detail.Status == "Initiated")
+                                    {
+                                        @Html.ActionLink("View Details", "InitiatedRequests", new { RequestId = @detail.ID })
+                                    }
+                                    @if (detail.Status == "Identified")
+                                    {
+                                        @Html.ActionLink("View Details", "IdentifiedRequests", new { RequestId = @detail.ID })
+                                    }
+                                    @if (detail.Status == "Approved")
+                                    {
+                                        @Html.ActionLink("View Details", "ApprovedRequests", new { RequestId = @detail.ID })
+                                    }
+                                     @*<button type="submit" id="btnDetail" class="btn btn-primary" style="margin-top:20px">View Detail</button>*@
+                                      </td>
+
+
+                                </tr>
+
+
+                             }
+                         }
+                         else
+                         {
+                            <tr>
+                                <td colspan="9" style="background-color:gainsboro;color:red;font-size:x-large"><div>No Requests Found !!</div></td>
+                            </tr>
+                         }
+
+
+                        </tbody>
+                    </table>
+       
+                </div>
+                    }
+
+                }
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        activeSideNav('approval');
+        var date = new Date();
+        date.setDate(date.getDate());
+        $('#LeaseClosureDate').datepicker({
+            format: 'dd M yyyy',
+            startDate: date
+        })
+
+        $('#submitBtn').prop('enabled', true).text('Search Requests');
+
+        $('#LeaseClosureDate').datepicker().on("input change", function (e) {
+            $('#LeaseClosureDate').val(e.target.value);
+        });
+
+        $("#FromDate").datepicker({ format: 'dd M yyyy' });
+        $('#FromDate').datepicker().on("input change", function (e) {
+            $('#FromDate').val(e.target.value);
+        });
+
+        $("#ToDate").datepicker({ format: 'dd M yyyy' });
+        $('#ToDate').datepicker().on("input change", function (e) {
+            $('#ToDate').val(e.target.value);
+        });
+
+        //$("#createform").submit(function () {
+        //    $('#submitBtn').prop('disbaled',true).text('Saving...');
+        //    return true; // return false to cancel form action
+        //});
+    });
+
+
+
+    //function DisplayProgressMessage(ctl, msg) {
+    //    $(ctl).prop("disabled", true).text(msg);
+    //    $("body").addClass("submit-progress-bg");
+    //    return true;
+    //}
+</script>
+
+
+

@@ -119,12 +119,40 @@ namespace OfficeSpace.Models
                         obj.OfficeName = reader["OfficeName"].ToString();
                         obj.RegionalOffice = reader["RegionalOffice"].ToString();
 
+                        obj.IsDocumentUploded = reader["IsDocumentUploaded"].ToString();
+                        obj.DocumentName = reader["LeaseDocumentName"].ToString();
+
                         BranchDataList.Add(obj);
                     }
                 }
                 reader.Close();
             }
 
+        }
+
+        public void UploadLeaseDocument(int ID, string FileName)
+        {
+            try
+            {
+
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = "udp_Store_UpdateLeaseDocument";
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ID", Convert.ToInt32(ID));
+                    command.Parameters.AddWithValue("@FileName", FileName);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

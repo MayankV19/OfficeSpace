@@ -41,9 +41,10 @@
                 {
 
                     <li id="approval" style="padding-left: 5%; background-color: rgb(93, 93, 93); color: rgb(255, 255, 255);" onclick="activeSideNav('approval')">
-                        <a href="~/Approval/Index" style="color: rgb(255, 255, 255);text-decoration:none;">
-                            <span class="sidenav-font"><i class="fa fa-1x fa-angle-double-right">&nbsp;</i>&nbsp;Approve</span>
-                        </a>
+                        @*<a href="~/Approval/Index" style="color: rgb(255, 255, 255);text-decoration:none;">*@
+                            <a href="~/Request/Dashboard" style="color: rgb(255, 255, 255);text-decoration:none;">
+                                <span class="sidenav-font"><i class="fa fa-1x fa-angle-double-right">&nbsp;</i>&nbsp;Approve</span>
+                            </a>
                     </li>
                 }
                 @if (Session["CurrentUserRole"].ToString() == "Admin")
@@ -60,14 +61,28 @@
                         <span class="sidenav-font"><i class="fa fa-1x fa-cog"></i>&nbsp;Change Password</span>
                     </a>
                 </li>
-                @if (Session["CurrentUserRole"].ToString() == "President")
-                {
+                @*@if (Session["CurrentUserRole"].ToString() == "President")
+                {*@
                     <li id="FullfilledOffices" style="padding-left: 5%; background-color: rgb(93, 93, 93); color: rgb(255, 255, 255);" onclick="activeSideNav('FullfilledOffices')">
                         <a href="~/FurnishedRentals/Index" style="color: rgb(255, 255, 255);text-decoration:none;">
                             <span class="sidenav-font"><i class="fa fa-1x fa-angle-double-right">&nbsp;</i>Existing Rental Details</span>
                         </a>
                     </li>
+                @*}*@
+                @if (Session["CurrentUserRole"].ToString() == "President")
+                {
+                    <li id="FullfilledOffices" style="padding-left: 5%; background-color: rgb(93, 93, 93); color: rgb(255, 255, 255);" >
+                        @Html.ActionLink("Lease Expiring Report", "LeaveExpiringDetails", "Reports")
+                            <span class="sidenav-font"><i class="fa fa-1x fa-angle-double-right">&nbsp;</i>Lease Expiring Reports</span>
+                       
+                    </li>
                 }
+             
+                @*<li>
+                    @Html.ActionLink("Lease Expiring Report", "LeaveExpiringData", "Reports")
+                </li>*@
+
+
                 </ul>
         </div>
     </div>

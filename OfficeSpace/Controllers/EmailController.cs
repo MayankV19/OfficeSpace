@@ -1,4 +1,5 @@
-﻿using OfficeSpace.Models;
+﻿
+using OfficeSpace.BussinessService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,32 @@ namespace OfficeSpace.Controllers
 {
     public class EmailController : ApiController
     {
-        public EmailController()
-        {}        
+        private  IRequestBusinessService _RequestBussinessService;
 
-        [HttpGet]
+        public EmailController( IRequestBusinessService RequestBussinessService)
+        {
+            _RequestBussinessService =  RequestBussinessService;
+
+        }
+     
+
+
+      [HttpGet]
         [Route("api/email/approvedetails")]
         public void ApproveDetails(int ID,string Name)
-        {            
-            EmailManager manager = new EmailManager();
-            manager.ApprovedEmail(Name, ID);           
+        {
+          //  _RequestBussinessService = new RequestBussinessService();
+            _RequestBussinessService.ApproveDetails(ID, Name);
+        //    EmailManager manager = new EmailManager();
+        //    manager.ApprovedEmail(Name, ID);
         }
 
         [HttpGet]
         [Route("api/email/disapprovedetails")]
         public void DisapproveDetails(int ID, string Name)
         {
-            EmailManager manager = new EmailManager();
-            manager.Disapproved(Name, ID);
+            //EmailManager manager = new EmailManager();
+            //manager.Disapproved(Name, ID);
         }
     }
 }

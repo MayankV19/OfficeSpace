@@ -50,5 +50,9 @@ namespace OfficeSpace.Models
         public string Remarks { get; set; }
         public string OfficeName { get; set; }
         public string RegionalOffice { get; set; }
+
+        public string IsDocumentUploded { get; set; }
+        public string DocumentName { get; set; }
+        public string hello { get; set; }
     }
 }

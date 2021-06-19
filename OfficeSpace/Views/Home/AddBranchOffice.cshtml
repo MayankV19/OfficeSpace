@@ -364,6 +364,11 @@
             $('#DateFromWhich').val(e.target.value);
         });
 
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
         $("#createform").submit(function () {
             $('#submitBtn').prop('disbaled',true).text('Saving...');
             return true; // return false to cancel form action

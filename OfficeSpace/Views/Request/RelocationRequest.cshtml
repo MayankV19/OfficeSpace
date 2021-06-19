@@ -1,0 +1,711 @@
+﻿
+@model OfficeSpace.Models.RequestModel
+@{
+    ViewBag.Title = "RelocationRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .validationError {
+        font-size: 14px;
+        color: #ff0000;
+    }
+
+    span.field-validation-error {
+        color: red;
+    }
+
+    .submit-progress {
+        padding-top: 2em;
+        width: 23em;
+        margin-left: -11.5em;
+    }
+
+        .submit-progress i {
+            margin-right: 0.5em;
+        }
+</style>
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" temp_href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+<script src="http://code.jquery.com/jquery-1.8.3.js" temp_src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<link href="~/ContentOld/Spinner.css" rel="stylesheet" />
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js" temp_src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#SuperBuiltUpArea").tooltip({ track: true });
+        $("#BuiltUpArea").tooltip({ track: true });
+        $("#CarpetArea").tooltip({ track: true });
+
+    });
+
+</script>
+@*<script>
+        function DisplayProgressMessage(ctl, msg) {
+            $(ctl).prop("disabled", true);
+            $(ctl).text(msg);
+            return true;
+        }
+    </script>*@
+<script>
+    function DisplayProgressMessage(ctl, msg) {
+        $(ctl).prop("disabled", true).text(msg);
+        $("body").addClass("submit-progress-bg");
+        // Wrap in setTimeout so the UI
+        // can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("hidden");
+        }, 1);
+        return true;
+    }
+</script>
+
+<div id="page-wrapper">
+    <div class="panel" style="overflow:scroll;height:650px;">
+        <div class="panel-heading red-background-colour">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <h4><strong>Office Relocation Requirement</strong></h4>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">&nbsp;</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("SaveRelocationRequest", "Request", FormMethod.Post, new { @class = "form-font", id = "createform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    @*@if (!string.IsNullOrEmpty(TempData["error"]?.ToString()))
+                    {
+                        <div class="col-md-12 text-danger mb-2">@TempData["error"]</div>
+                    }*@
+                    @Html.HiddenFor(m => m.Company)
+                    @Html.HiddenFor(m => m.SelectedMenu)
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="BusinessType">Business Type</label>
+                            <select class="form-control" id="BuisnessType" name="BuisnessType">
+                                <option value="Branch">Branch</option>
+                                <option value="Region">Region</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="AllocationType">Allocation Type</label>
+                            <select class="form-control" id="AllocationType" name="AllocationType">
+                                <option value="Rent">Rent</option>
+                                @*<option value="BUY">BUY</option>*@
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="City">City</label>
+                            <select class="form-control" id="City" name="City">
+                                @if (Model != null)
+                                {
+                                    <option value="">---Select City---</option>
+                                    foreach (string cityName in Model.CityList)
+                                    {
+                                        if (cityName == Model.City)
+                                        {
+                                            <option value="@cityName" selected="selected">@cityName </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@cityName">@cityName</option>
+                                        }
+                                    }
+
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(m => m.City)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            @Html.TextBoxFor(m => m.ProposedDateofRenewal, new { value = "", @class = "form-control form-control-sm input-md", id = "ProposedDateofRenewal", @readonly = "readonly", placeholder = "Existing Lease Renewal Date" })
+                            @Html.ValidationMessageFor(m => m.ProposedDateofRenewal)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.DateFromWhich, new { value = "", @class = "form-control form-control-sm input-md", id = "DateFromWhich", @readonly = "readonly", placeholder = "Proposed Lease Start Date" })
+                            @Html.ValidationMessageFor(m => m.DateFromWhich)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div>
+                                @Html.RadioButtonFor(model => model.Fitouts, "WithFitouts")
+                                With Fit-outs
+                                &nbsp;&nbsp;
+                                @Html.RadioButtonFor(model => model.Fitouts, "Bareshell")
+                                Bare Shell
+                                @Html.ValidationMessageFor(m => m.Fitouts)
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                        <label for="">Location</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingLocation, new { value = "", @readonly = "readonly", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingLocation", placeholder = "Existing Location" })
+                            @Html.ValidationMessageFor(m => m.ExistingLocation)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedLocation, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ProposedLocation", placeholder = "Proposed Location" })
+                            @Html.ValidationMessageFor(m => m.ProposedLocation)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Lease Start Amount (In INR)</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingLeaseStartAmount, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingLeaseStartAmount", @readonly = "readonly", placeholder = "Existing Lease Start Amount (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingLeaseStartAmount)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.LeaseStartAmount, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "LeaseStartAmount", placeholder = "Proposed Lease Start Amount (In INR)" })
+                            @Html.ValidationMessageFor(m => m.LeaseStartAmount)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Rental Escallation</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingRentalEscallation, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingRentalEscallation", @readonly = "readonly", placeholder = "Existing Rental Escallation" })
+                            @Html.ValidationMessageFor(m => m.ExistingRentalEscallation)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.RentalEscallation, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "RentalEscallation", placeholder = "Proposed Rental Escallation" })
+                            @Html.ValidationMessageFor(m => m.RentalEscallation)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Escallation Period</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingEscallationPeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingEscallationPeriod", @readonly = "readonly", placeholder = "Existing Escallation Period" })
+                            @Html.ValidationMessageFor(m => m.ExistingEscallationPeriod)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.EscallationPeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "EscallationPeriod", placeholder = "Proposed Escallation Period" })
+                            @Html.ValidationMessageFor(m => m.EscallationPeriod)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Lease Period</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingLeasePeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingLeasePeriod", @readonly = "readonly", placeholder = "Existing Lease Period" })
+                            @Html.ValidationMessageFor(m => m.ExistingLeasePeriod)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.LeasePeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "LeasePeriod", placeholder = "Proposed Lease Period" })
+                            @Html.ValidationMessageFor(m => m.LeasePeriod)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Lease Closure Date</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingLeaseClosureDate, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingLeaseClosureDate", @readonly = "readonly", placeholder = "Existing Lease Closure Date" })
+                            @Html.ValidationMessageFor(m => m.ExistingLeaseClosureDate)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.LeaseClosureDate, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "LeaseClosureDate", @readonly = "readonly", placeholder = "Proposed Lease Closure Date" })
+                            @Html.ValidationMessageFor(m => m.LeaseClosureDate)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Advance Rental (In INR)</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingAdvanceRental, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingAdvanceRental", @readonly = "readonly", placeholder = "Existing Advance Rental (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingAdvanceRental)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.AdvanceRental, new { value = "", @max = "9999999999",  @type = "number", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "AdvanceRental", placeholder = "Proposed Advance Rental (In INR)" })
+                            @Html.ValidationMessageFor(m => m.AdvanceRental)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Total Amount Hold With Owner (In INR)</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingAmtHoldWithOwner, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingAmtHoldWithOwner", @readonly = "readonly", placeholder = "Existing Total Amount Hold With Owner (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingAmtHoldWithOwner)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.AmtHoldWithOwner, new { value = "", @max = "9999999999",  @type = "number", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "AmtHoldWithOwner", placeholder = "Proposed Total Amount Hold With Owner (In INR)" })
+                            @Html.ValidationMessageFor(m => m.AmtHoldWithOwner)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Notice Period</label>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingNoticePeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingNoticePeriod", @readonly = "readonly", placeholder = "Existing Notice Period" })
+                            @Html.ValidationMessageFor(m => m.ExistingNoticePeriod)
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.NoticePeriod, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "NoticePeriod", placeholder = "Proposed Notice Period" })
+                            @Html.ValidationMessageFor(m => m.NoticePeriod)
+                        </div>
+
+                    </div>
+
+             
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Road Name for Signage</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.Signage, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "PreferredRoadforsignage", @readonly = "readonly", placeholder = "Existing Road for Signage" })
+                            @Html.ValidationMessageFor(m => m.Signage)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedSignage, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ProposedPreferredRoadforsignage", placeholder = "Proposed Road for Signage" })
+                            @Html.ValidationMessageFor(m => m.ProposedSignage)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Number of Employee</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.NoOfPersons, new { value = "", @max = "999999", @type = "number", @class = "form-control form-control-sm input-md", id = "NoOfPersons", @readonly = "readonly", placeholder = "Existing No. of Employee" })
+                            @Html.ValidationMessageFor(m => m.NoOfPersons)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedNoOfPersons, new { value = "", @maxlength = "6", @max = "999999", @type = "number", @class = "form-control form-control-sm input-md", id = "ProposedNoOfPersons", placeholder = "Proposed No. of Employee" })
+                            @Html.ValidationMessageFor(m => m.ProposedNoOfPersons)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Super Built Up Area (In Sq. ft.)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.SuperBuiltUp, new
+                       {
+                           value = "",
+                           @readonly = "readonly",
+                           @maxlength = "10",
+                           @class = "form-control form-control-sm input-md",
+                           @max = "9999999999",
+                           @type = "number",
+                           id = "SuperBuiltUpArea", @*@title = "Please enter the Super Built Up Area"*@placeholder = "Existing Super Built Up Area (In Sq. ft.)"
+                       })
+                            @Html.ValidationMessageFor(m => m.SuperBuiltUp)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedSuperBuiltUp, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number",  @class = "form-control form-control-sm input-md", id = "ProposedSuperBuiltUp", placeholder = "Proposed Super Built Up Area (In Sq. ft.)" })
+                            @Html.ValidationMessageFor(m => m.ProposedSuperBuiltUp)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Built Up Area (In Sq. ft.)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.BuiltUp, new
+                       {
+                           value = "",
+                           @class = "form-control form-control-sm input-md",
+                           @maxlength = "10",
+                           @readonly = "readonly",
+                           @max = "9999999999",
+                           @type = "number",
+                           id = "BuiltUpArea", @*@title = "Please enter the Built Up Area"*@placeholder = "Existing Built Up Area (In Sq. ft.)"
+                       })
+                            @Html.ValidationMessageFor(m => m.BuiltUp)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedBuiltUp, new { value = "", @max = "9999999999", @type = "number", @maxlength = "10",  @class = "form-control form-control-sm input-md", id = "ProposedBuiltUp", placeholder = "Proposed Built Up Area (In Sq. ft.)" })
+                            @Html.ValidationMessageFor(m => m.ProposedBuiltUp)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for="">Carpet Area (In Sq. ft.)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.CarpetArea, new
+                       {
+                           value = "",
+                           @maxlength = "10",
+                           @max = "9999999999",
+                           @readonly = "readonly",
+                           @class = "form-control form-control-sm input-md",
+                           @type = "number",
+                           id = "CarpetArea", @*@title = "Please enter the Carpet Area"*@placeholder = "Existing Carpet Area (In Sq. ft.)"
+                       })
+                            @Html.ValidationMessageFor(m => m.CarpetArea)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedCarpetArea, new { value = "", @max = "9999999999", @type = "number", @maxlength = "10",  @class = "form-control form-control-sm input-md", id = "ProposedCarpetArea", placeholder = "Proposed Carpet Area (In Sq. ft.)" })
+                            @Html.ValidationMessageFor(m => m.ProposedCarpetArea)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Rental Area (In Sq. ft.)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.RentalArea, new { value = "", @max = "9999999999", @readonly = "readonly", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "RentalArea", placeholder = "Existing Rental Area (In Sq. ft.)" })
+                            @Html.ValidationMessageFor(m => m.RentalArea)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedRentalArea, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ProposedRentalArea", placeholder = "Proposed Rental Area (In Sq. ft.)" })
+                            @Html.ValidationMessageFor(m => m.ProposedRentalArea)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Rental cost/square feet (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.CostPerSquareFeet, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "CostPerSquareFeet", placeholder = "Existing Rental Cost / sq. ft.(In INR)" })
+                            @Html.ValidationMessageFor(m => m.CostPerSquareFeet)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedCostPerSquareFeet, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ProposedCostPerSquareFeet", placeholder = "Proposed Rental Cost / sq. ft.(In INR)" })
+                            @Html.ValidationMessageFor(m => m.ProposedCostPerSquareFeet)
+                        </div>
+                    </div>
+                    @*<div class="row" style="margin-left:10px;">
+                            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                                <label for=""> Total Monthly Rental Cost (In INR)</label>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                @Html.TextBoxFor(m => m.ExistingMonthlyCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingMonthlyCost", placeholder = "Existing Monthly Cost (In INR)" })
+                                @Html.ValidationMessageFor(m => m.ExistingMonthlyCost)
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                @Html.TextBoxFor(m => m.ProposedMonthlyCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ProposedMonthlyCost", placeholder = "Proposed Monthly Cost (In INR)" })
+                                @Html.ValidationMessageFor(m => m.ProposedMonthlyCost)
+                            </div>
+                        </div>*@
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Security Deposit (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.SecurityDeposit, new { value = "", @readonly = "readonly", @max = "9999999", @maxlength = "7", @type = "number", @class = "form-control form-control-sm input-md", id = "SecurityDeposit", placeholder = "Existing Security Deposit (In INR)" })
+                            @Html.ValidationMessageFor(m => m.SecurityDeposit)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ProposedSecurityDeposit, new { value = "", @max = "9999999", @maxlength = "7", @type = "number", @class = "form-control form-control-sm input-md", id = "ProposedSecurityDeposit", placeholder = "Proposed Security Deposit (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ProposedSecurityDeposit)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Present Monthly Rental Cost (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingPresentMonthlyRenatlCost, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingPresentMonthlyRenatlCost", placeholder = "Existing Present Monthly Rental Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingPresentMonthlyRenatlCost)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.PresentMonthlyRenatlCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "PresentMonthlyRenatlCost", placeholder = "Proposed Present Monthly Rental Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.PresentMonthlyRenatlCost)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Present Monthly Billing (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingPresentMonthlyBilling, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingPresentMonthlyBilling", placeholder = "Existing Present Monthly Billing (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingPresentMonthlyBilling)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.PresentMonthlyBilling, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "PresentMonthlyBilling", placeholder = "Proposed Present Monthly Billing (In INR)" })
+                            @Html.ValidationMessageFor(m => m.PresentMonthlyBilling)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Rental Cost Percentage (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingRentalCostPer, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingRentalCostPer", placeholder = "Existing Rental Cost Percentage (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingRentalCostPer)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.RentalCostPer, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "RentalCostPer", placeholder = "Proposed Rental Cost Percentage (In INR)" })
+                            @Html.ValidationMessageFor(m => m.RentalCostPer)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Monthly Maintenance Cost (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingMonthlyMaintenenceCost, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingMonthlyMaintenenceCost", placeholder = "Monthly Maintenance Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingMonthlyMaintenenceCost)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.MonthlyMaintenenceCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "MonthlyMaintenenceCost", placeholder = "Monthly Maintenance Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.MonthlyMaintenenceCost)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Average Maintenance Cost (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingAvgMaintenanceCost, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingAvgMaintenanceCost", placeholder = "Existing Average Maintenance Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingAvgMaintenanceCost)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.AvgMaintenanceCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "AvgMaintenanceCost", placeholder = "Proposed Average Maintenance Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.AvgMaintenanceCost)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Monthly Electric Cost (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingmonthlyElectricCost, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingmonthlyElectricCost", placeholder = "Existing Monthly Electric Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingmonthlyElectricCost)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.monthlyElectricCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "monthlyElectricCost", placeholder = "Proposed Monthly Electric Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.monthlyElectricCost)
+                        </div>
+                    </div>
+
+                 
+
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Monthly All Other Costs (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingMonthlyOtherCosts, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingMonthlyOtherCosts", placeholder = "Existing Monthly All Other Costs (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingMonthlyOtherCosts)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.MonthlyOtherCosts, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "MonthlyOtherCosts", placeholder = "Proposed Monthly All Other Costs (In INR)" })
+                            @Html.ValidationMessageFor(m => m.MonthlyOtherCosts)
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Total Monthly Rental Cost (In INR)</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingTotalMonthlyRenatlCost, new { value = "", @readonly = "readonly", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingTotalMonthlyRenatlCost", placeholder = "Existing Total Monthly Rental Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.ExistingTotalMonthlyRenatlCost)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.TotalMonthlyRenatlCost, new { value = "", @max = "9999999999", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "TotalMonthlyRenatlCost", placeholder = "Proposed Total Monthly Rental Cost (In INR)" })
+                            @Html.ValidationMessageFor(m => m.TotalMonthlyRenatlCost)
+                        </div>
+                    </div>
+
+
+
+                
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Number of Car Park</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @*<select class="form-control form-control-sm input-md" id="CarPark" name="CarPark" >
+                                @for (int i = 0; i <= 100; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>*@
+                            @Html.TextBoxFor(m => m.ExistingCarPark, new { value = "", @max = "9999999999", @readonly = "readonly", @maxlength = "10", @type = "number", @class = "form-control form-control-sm input-md", id = "ExistingCarPark", placeholder = "Existing Car Park" })
+                            @Html.ValidationMessageFor(m => m.ExistingCarPark)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <select class="form-control form-control-sm input-md" id="ProposedCarPark" name="ProposedCarPark">
+                                @for (int i = 0; i <= 100; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Name</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingName, new { value = "", @readonly = "readonly", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "ExistingName", placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.ExistingName)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.Name, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "Name", placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Email</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingEmail, new { value = "", @readonly = "readonly", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "ExistingEmail", placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.ExistingEmail)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.Email, new { value = "", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "Email", placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.Email)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Mobile</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingMobile, new { value = "", @readonly = "readonly", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "ExistingMobile", placeholder = "Mobile" })
+                            @Html.ValidationMessageFor(m => m.ExistingMobile)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.Mobile, new { value = "", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "Mobile", placeholder = "Mobile" })
+                            @Html.ValidationMessageFor(m => m.Mobile)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Office Name</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.ExistingOfficeName, new { value = "", @readonly = "readonly", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "ExistingOfficeName", placeholder = "OfficeName" })
+                            @Html.ValidationMessageFor(m => m.ExistingOfficeName)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextBoxFor(m => m.OfficeName, new { value = "", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "OfficeName", placeholder = "OfficeName" })
+                            @Html.ValidationMessageFor(m => m.OfficeName)
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                            <label for=""> Remarks</label>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextAreaFor(m => m.Remarks, new { value = "", @readonly = "readonly", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "Remarks", placeholder = "Remarks 1" })
+                            @Html.ValidationMessageFor(m => m.Remarks)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            @Html.TextAreaFor(m => m.ProposedRemarks, new { value = "", @maxlength = "800", @class = "form-control form-control-sm input-md", id = "ProposedRemarks", placeholder = "Remarks 2" })
+                            @Html.ValidationMessageFor(m => m.ProposedRemarks)
+                        </div>
+                    </div>
+                </div>
+                <div class="row pull-right">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fa fa-check-circle">&nbsp;</i>Create Request</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        activeSideNav('createrequest');
+        var date = new Date();
+        date.setDate(date.getDate());
+        $('#LeaseClosureDate').datepicker({
+            format: 'dd M yyyy',
+            startDate: date
+        })
+
+        $('#submitBtn').prop('enabled', true).text('Create Request');
+
+        $('#LeaseClosureDate').datepicker().on("input change", function (e) {
+            $('#LeaseClosureDate').val(e.target.value);
+        });
+
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
+        $("#createform").submit(function () {
+            $('#submitBtn').prop('disbaled',true).text('Saving...');
+            return true; // return false to cancel form action
+        });
+    });
+
+
+
+    //function DisplayProgressMessage(ctl, msg) {
+    //    $(ctl).prop("disabled", true).text(msg);
+    //    $("body").addClass("submit-progress-bg");
+    //    return true;
+    //}
+</script>
+

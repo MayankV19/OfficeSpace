@@ -1,5 +1,7 @@
-﻿using OfficeSpace.Extension;
+﻿using OfficeSpace.BussinessService;
+using OfficeSpace.Extension;
 using OfficeSpace.Models;
+using OfficeSpace.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +10,22 @@ using System.Web.Mvc;
 
 namespace OfficeSpace.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        private readonly IRequestBusinessService _navigationService;
+        private readonly IMasterBussinessService _MasterService;
+        public HomeController(IRequestBusinessService navigationService, IMasterBussinessService masterService, ILogService logService):base(logService)
+        {
+            _navigationService =  navigationService;
+            _MasterService = masterService;
+        }
+
         // GET: Home
         public ActionResult Index()
         {
             try
             {
+             
                 if (Session["CurrentUserName"] == null)
                 {
                     return RedirectToAction("Login", "Account");
@@ -28,9 +39,10 @@ namespace OfficeSpace.Controllers
                     model.Init(roleName);
                 }
                 else
-                {
+                { 
                     model.Init(roleName, Session["CurrentUserName"].ToString());
                 }
+             //   GetEmptyBranch();
                 return View(model);
             }
             catch (Exception ex)
@@ -133,5 +145,19 @@ namespace OfficeSpace.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult LoadBranch(string City)
+        {
+
+            var branches = _MasterService.GetBranchList(City);
+            var branchList = branches.Select(sd => new { Value = sd, Text = sd });
+            return Json(branchList, JsonRequestBehavior.AllowGet);
+        }
+        private void GetEmptyBranch()
+        {
+           var BranchList = new List<SelectListItem>();
+            BranchList.Add(new SelectListItem { Value = "New", Text = "New Request" });
+            ViewBag.BranchList = BranchList;
+        }
     }
 }

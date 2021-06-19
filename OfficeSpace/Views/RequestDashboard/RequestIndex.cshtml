@@ -1,0 +1,180 @@
+﻿@model OfficeSpace.Models.RequestDashboardModel
+@{
+    ViewBag.Title = "RequestIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .validationError {
+        font-size: 14px;
+        color: #ff0000;
+    }
+
+    span.field-validation-error {
+        color: red;
+    }
+
+    .submit-progress {
+        padding-top: 2em;
+        width: 23em;
+        margin-left: -11.5em;
+    }
+
+        .submit-progress i {
+            margin-right: 0.5em;
+        }
+</style>
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" temp_href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+<script src="http://code.jquery.com/jquery-1.8.3.js" temp_src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<link href="~/ContentOld/Spinner.css" rel="stylesheet" />
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js" temp_src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#SuperBuiltUpArea").tooltip({ track: true });
+        $("#BuiltUpArea").tooltip({ track: true });
+        $("#CarpetArea").tooltip({ track: true });
+
+    });
+
+</script>
+@*<script>
+        function DisplayProgressMessage(ctl, msg) {
+            $(ctl).prop("disabled", true);
+            $(ctl).text(msg);
+            return true;
+        }
+    </script>*@
+<script>
+    function DisplayProgressMessage(ctl, msg) {
+        $(ctl).prop("disabled", true).text(msg);
+        $("body").addClass("submit-progress-bg");
+        // Wrap in setTimeout so the UI
+        // can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("hidden");
+        }, 1);
+        return true;
+    }
+</script>
+
+<div id="page-wrapper">
+    <div class="panel" style="overflow:scroll;height:650px;">
+        <div class="panel-heading red-background-colour">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <h4><strong>Office Relocation Requirement</strong></h4>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">&nbsp;</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Index", "RequestDashboard", FormMethod.Post, new { @class = "form-font", id = "createform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="BusinessType">Select Company</label>
+                            <select class="form-control" id="BuisnessType" name="BuisnessType">
+                                <option value="Branch">SIS</option>
+                                <option value="Region">DTSS</option>
+                                <option value="Region">Rare</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="">From Date</label>
+                            @Html.TextBoxFor(m => m.FromDate, new { value = "", @maxlength = "100", @class = "form-control form-control-sm input-md", id = "FromDate", placeholder = "Proposed Location" })
+                            @Html.ValidationMessageFor(m => m.FromDate)
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="">To Date</label>
+                            @Html.TextBoxFor(m => m.ToDate, new { value = "", @class = "form-control form-control-sm input-md", id = "ToDate", @readonly = "readonly", placeholder = "Proposed Lease Start Date" })
+                            @Html.ValidationMessageFor(m => m.ToDate)
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left:10px;">
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="BusinessType">Select City</label>
+                            <select class="form-control" id="BuisnessType" name="BuisnessType">
+                                <option value="Branch">Gurgaon</option>
+                                <option value="Region">Delhi</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label for="BusinessType">Select Status</label>
+                            <select class="form-control" id="BuisnessType" name="BuisnessType">
+                                <option value="Branch">New</option>
+                                <option value="Region">Initiated</option>
+                                <option value="Branch">Identified</option>
+                                <option value="Region">Approved</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fa fa-check-circle">&nbsp;</i>Search</button>
+                        </div>
+
+                    </div>
+                </div>
+                @*<div class="row pull-right">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fa fa-check-circle">&nbsp;</i>Save</button>
+                    </div>*@
+
+            }
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        activeSideNav('createrequest');
+        var date = new Date();
+        date.setDate(date.getDate());
+        $('#LeaseClosureDate').datepicker({
+            format: 'dd M yyyy',
+            startDate: date
+        })
+
+        $('#submitBtn').prop('enabled', true).text('Save');
+
+        $('#LeaseClosureDate').datepicker().on("input change", function (e) {
+            $('#LeaseClosureDate').val(e.target.value);
+        });
+
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
+        $("#DateFromWhich").datepicker({ format: 'dd M yyyy', startDate: date });
+        $('#DateFromWhich').datepicker().on("input change", function (e) {
+            $('#DateFromWhich').val(e.target.value);
+        });
+
+        $("#createform").submit(function () {
+            $('#submitBtn').prop('disbaled',true).text('Saving...');
+            return true; // return false to cancel form action
+        });
+    });
+
+
+
+    //function DisplayProgressMessage(ctl, msg) {
+    //    $(ctl).prop("disabled", true).text(msg);
+    //    $("body").addClass("submit-progress-bg");
+    //    return true;
+    //}
+</script>
+

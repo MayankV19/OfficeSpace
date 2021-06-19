@@ -1,0 +1,13 @@
+﻿@{OfficeSpace.MessageInfo messageinfo = (OfficeSpace.MessageInfo)ViewBag.MessageInfo;}
+@if(messageinfo!=null)
+{
+    if(messageinfo.HasError==true)
+    {
+        <div class="alert-danger">@(messageinfo.Message)</div>
+    }
+    else
+    {
+        <div class="alert-success">@(messageinfo.Message)</div>
+    }
+}
+

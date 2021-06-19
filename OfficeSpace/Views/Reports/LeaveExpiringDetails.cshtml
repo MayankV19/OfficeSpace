@@ -1,0 +1,162 @@
+﻿@model OfficeSpace.Models.LeaseExpiringReportViewModel
+
+@{
+    ViewBag.Title = "Lease Expiring Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .row {
+        padding: 10px 10px 10px 10px;
+    }
+</style>
+<div id="page-wrapper">
+    <div class="panel">
+
+        <div class="panel-heading red-background-colour">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <h5>Leave Expiring Report</h5>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">&nbsp;</div>
+            </div>
+        </div>
+        @using (Html.BeginForm("SearchLeaseExpiringDetails", "Reports", FormMethod.Post))
+        {
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.Label("Select Lease Expiring Period");
+                        @Html.DropDownList("LeaseExpiringPeriodList", new SelectList(Model.SearchParams.ExpiringPeriods, "ExpiringPeriodValue", "ExpiringPeriodText", Model.SearchParams.SelectedPeriod), "All", new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("Select City");
+                        @Html.DropDownList("CityList", new SelectList(Model.SearchParams.Cities, Model.SearchParams.SelectedCity), "All", new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        <input type="submit" value="Search" class="btn btn-primary" style="margin-top:24px;" />
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+    <div class="panel-body">
+        <div class="form-font table-responsive" style="width:auto; overflow:auto;">
+            <table class="table table-striped">
+                <tr class="table-heading-font">
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.City)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.LeaseClouserDate)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.Company)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.NoticePeriod)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.TotalMonthlyRentalCost)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.SecurityDeposit)
+                    </th>
+                  
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.BuiltUpArea)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.CarpetArea)
+                    </th>
+                    <th class="table-head-th" style="white-space:nowrap">
+                        @Html.DisplayNameFor(model => model.HeaderModel.RentalArea)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.MonthsToExpire)
+                        </th>*@
+                    <th></th>
+                </tr>
+                @if (Model.ExpiringLeaseList != null && Model.ExpiringLeaseList.Count > 0)
+                {
+                    foreach (var item in Model.ExpiringLeaseList)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LeaseClouserDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Company)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NoticePeriod)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalMonthlyRentalCost)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SecurityDeposit)
+                            </td>
+                           
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BuiltUpArea)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CarpetArea)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RentalArea)
+                            </td>
+
+
+                        </tr>
+                    }
+                    <tr style="background-color:dodgerblue;color:black;">
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td></td>
+                        <td>
+                            Total :
+                        </td>
+                        <td>
+                            @Html.DisplayFor(Model => Model.Footer.TotalMonthlyRentalCost)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(Model => Model.Footer.TotalSecurityDeposit)
+                        </td>
+                      
+                        <td>
+                            @Html.DisplayFor(Model => Model.Footer.TotalBuiltupArea)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(Model => Model.Footer.TotalCarpetArea)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(Model => Model.Footer.TotalRentalArea)
+                        </td>
+
+
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9">
+                            <div align="center">No Records Found</div>
+
+                        </td>
+                    </tr>
+                }
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
