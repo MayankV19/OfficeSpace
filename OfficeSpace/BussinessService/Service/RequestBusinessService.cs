@@ -255,7 +255,20 @@ namespace OfficeSpace.BussinessService
 
         }
 
-      public  void UpdateFreshRequests(RequestModel Model)
+       public void EmailInitiateRequests(RequestModel model, bool IsReqMerged, string name)
+        {
+            try
+            {
+                 _navigationRepositoryService.EmailInitiateRequests(model, IsReqMerged, name);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public  void UpdateFreshRequests(RequestModel Model)
         {
             try
             {

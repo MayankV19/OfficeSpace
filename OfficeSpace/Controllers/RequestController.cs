@@ -83,6 +83,78 @@ namespace OfficeSpace.Controllers
             {
                 case "Initiated":
                 int GetStatus= _RequestBussinessService.UpdateFreshStatus(Convert.ToInt32(Session["FreshRequestID"].ToString()), Session["CurrentUserName"].ToString(), "Initiated");
+                  
+                    Model.ID = Convert.ToInt32(Session["FreshRequestID"].ToString());
+                    Model.LoggedInUser = Session["CurrentUserName"].ToString();
+                    Model.OfficeName = Request.Form["FurnishedDataList[1].OfficeName"].ToString();
+                    Model.ProposedLocation = Request.Form["FurnishedDataList[1].ProposedLocation"].ToString();
+                    Model.LeaseStartDate = Request.Form["FurnishedDataList[1].LeaseStartDate"].ToString();
+                    Model.LeaseStartAmount = Request.Form["FurnishedDataList[1].LeaseStartAmount"].ToString();
+                    Model.RentalEscallation = Request.Form["FurnishedDataList[1].RentalEscallation"].ToString();
+                    Model.EscallationPeriod = Request.Form["FurnishedDataList[1].EscallationPeriod"].ToString();
+                    Model.LeasePeriod = Request.Form["FurnishedDataList[1].LeasePeriod"].ToString();
+                    //Model.LeaseClosureDate = Request.Form["FurnishedDataList[1].LeaseClosureDate"].ToString();
+                    Model.AdvanceRental = Request.Form["FurnishedDataList[1].AdvanceRental"].ToString();
+                    Model.AmtHoldWithOwner = Request.Form["FurnishedDataList[1].AmtHoldWithOwner"].ToString();
+                    Model.NoticePeriod = Request.Form["FurnishedDataList[1].NoticePeriod"].ToString();
+                    Model.ProposedSignage = Request.Form["FurnishedDataList[1].ProposedSignage"].ToString();
+                    Model.ProposedNoOfPersons = Request.Form["FurnishedDataList[1].ProposedNoOfPersons"].ToString();
+                    Model.ProposedSuperBuiltUp = Request.Form["FurnishedDataList[1].ProposedSuperBuiltUp"].ToString();
+                    Model.ProposedBuiltUp = Request.Form["FurnishedDataList[1].ProposedBuiltUp"].ToString();
+                    Model.ProposedCarpetArea = Request.Form["FurnishedDataList[1].ProposedCarpetArea"].ToString();
+                    Model.ProposedRentalArea = Request.Form["FurnishedDataList[1].ProposedRentalArea"].ToString();
+                    Model.ProposedCalcMonthlyCost = Request.Form["FurnishedDataList[1].ProposedCalcMonthlyCost"].ToString();
+                    Model.ProposedSecurityDeposit = Request.Form["FurnishedDataList[1].ProposedSecurityDeposit"].ToString();
+                    Model.PresentMonthlyRenatlCost = Request.Form["FurnishedDataList[1].PresentMonthlyRenatlCost"].ToString();
+                    Model.PresentMonthlyBilling = Request.Form["FurnishedDataList[1].PresentMonthlyBilling"].ToString();
+                    Model.RentalCostPer = Request.Form["FurnishedDataList[1].RentalCostPer"].ToString();
+                    Model.MonthlyMaintenenceCost = Request.Form["FurnishedDataList[1].MonthlyMaintenenceCost"].ToString();
+                    Model.AvgMaintenanceCost = Request.Form["FurnishedDataList[1].AvgMaintenanceCost"].ToString();
+                    Model.monthlyElectricCost = Request.Form["FurnishedDataList[1].monthlyElectricCost"].ToString();
+                    Model.MonthlyOtherCosts = Request.Form["FurnishedDataList[1].MonthlyOtherCosts"].ToString();
+                    Model.TotalMonthlyRenatlCost = Request.Form["FurnishedDataList[1].TotalMonthlyRenatlCost"].ToString();
+                    Model.ProposedCarPark = Request.Form["FurnishedDataList[1].ProposedCarPark"].ToString();
+                    Model.Name = Request.Form["FurnishedDataList[1].Name"].ToString();
+                    Model.Email = Request.Form["FurnishedDataList[1].Email"].ToString();
+                    Model.Mobile = Request.Form["FurnishedDataList[1].Mobile"].ToString();
+                    Model.ProposedRemarks = Request.Form["FurnishedDataList[1].ProposedRemarks"].ToString();
+
+                    Model.ExistingOfficeName = Model.ExistingOfficeName;
+                    //Model.ExistingLocation = Request.Form["FurnishedDataList[1].ExistingLocation"].ToString();
+                    //Model.ExistingLeaseStartDate = Request.Form["FurnishedDataList[1].ExistingLeaseStartDate"].ToString();
+                    //Model.ExistingLeaseStartAmount = Request.Form["FurnishedDataList[1].ExistingLeaseStartAmount"].ToString();
+                    //Model.ExistingRentalEscallation = Request.Form["FurnishedDataList[1].ExistingRentalEscallation"].ToString();
+                    //Model.ExistingEscallationPeriod = Request.Form["FurnishedDataList[1].ExistingEscallationPeriod"].ToString();
+                    //Model.ExistingLeasePeriod = Request.Form["FurnishedDataList[1].ExistingLeasePeriod"].ToString();
+                    ////Model.LeaseClosureDate = Request.Form["FurnishedDataList[1].LeaseClosureDate"].ToString();
+                    //Model.ExistingAdvanceRental = Request.Form["FurnishedDataList[1].ExistingAdvanceRental"].ToString();
+                    //Model.ExistingAmtHoldWithOwner = Request.Form["FurnishedDataList[1].ExistingAmtHoldWithOwner"].ToString();
+                    //Model.ExistingNoticePeriod = Request.Form["FurnishedDataList[1].ExistingNoticePeriod"].ToString();
+                    //Model.Signage = Request.Form["FurnishedDataList[1].Signage"].ToString();
+                    //Model.NoOfPersons = Request.Form["FurnishedDataList[1].NoOfPersons"].ToString();
+
+                    //Model.SuperBuiltUp = Request.Form["FurnishedDataList[1].SuperBuiltUp"].ToString();
+                    //Model.BuiltUp = Request.Form["FurnishedDataList[1].BuiltUp"].ToString();
+                    //Model.CarpetArea = Request.Form["FurnishedDataList[1].CarpetArea"].ToString();
+                    //Model.RentalArea = Request.Form["FurnishedDataList[1].RentalArea"].ToString();
+                    //Model.CalcMonthlyCost = Request.Form["FurnishedDataList[1].CalcMonthlyCost"].ToString();
+                    //Model.SecurityDeposit = Request.Form["FurnishedDataList[1].SecurityDeposit"].ToString();
+                    //Model.ExistingPresentMonthlyRenatlCost = Request.Form["FurnishedDataList[1].ExistingPresentMonthlyRenatlCost"].ToString();
+                    //Model.ExistingPresentMonthlyBilling = Request.Form["FurnishedDataList[1].ExistingPresentMonthlyBilling"].ToString();
+                    //Model.ExistingRentalCostPer = Request.Form["FurnishedDataList[1].ExistingRentalCostPer"].ToString();
+                    //Model.ExistingMonthlyMaintenenceCost = Request.Form["FurnishedDataList[1].ExistingMonthlyMaintenenceCost"].ToString();
+                    //Model.ExistingAvgMaintenanceCost = Request.Form["FurnishedDataList[1].ExistingAvgMaintenanceCost"].ToString();
+                    //Model.ExistingmonthlyElectricCost = Request.Form["FurnishedDataList[1].ExistingmonthlyElectricCost"].ToString();
+                    //Model.ExistingMonthlyOtherCosts = Request.Form["FurnishedDataList[1].ExistingMonthlyOtherCosts"].ToString();
+                    //Model.ExistingTotalMonthlyRenatlCost = Request.Form["FurnishedDataList[1].ExistingTotalMonthlyRenatlCost"].ToString();
+                    //Model.ExistingCarPark = Request.Form["FurnishedDataList[1].ExistingCarPark"].ToString();
+                    //Model.ExistingName = Request.Form["FurnishedDataList[1].ExistingName"].ToString();
+                    //Model.ExistingEmail = Request.Form["FurnishedDataList[1].ExistingEmail"].ToString();
+                    //Model.ExistingMobile = Request.Form["FurnishedDataList[1].ExistingMobile"].ToString();
+                    //Model.Remarks = Request.Form["FurnishedDataList[1].Remarks"].ToString();
+
+                    ViewBag.MessageInfo = new MessageInfo { Message = "Request has been Initiated Sucessfully !!", HasError = false };
+                    _RequestBussinessService.EmailInitiateRequests(Model, false, "ND");
                     return RedirectToAction("Dashboard");
                     break;
                 case "Rejected":

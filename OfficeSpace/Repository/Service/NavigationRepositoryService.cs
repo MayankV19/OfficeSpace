@@ -442,6 +442,17 @@ namespace OfficeSpace.Services
 
         }
 
+        public void EmailInitiateRequests(RequestModel model, bool IsReqMerged, string name)
+        {
+            string httpPort = ConfigurationManager.AppSettings["HttpPort"];
+            string AllocationToRHRButtonURL = httpPort + "api/email/approvedetails?ID=" + model.ID + "&Name=" + name;
+            string AllocationToSISAMCButtonURL = httpPort + "api/email/disapprovedetails?ID=" + model.ID + "&Name=" + name;
+            string emailBody = GetMailBodyInitiate(model);
+            string emailID = GetEmailId("SISAMCPresident","SISAMC");
+            //emailBody = emailBody + "<br/><b>For any changes please visit the application with your username and password !!<b>";
+            SendEmailWithButtonInitiate("New Initiated Request By President", emailBody, new List<string>() { emailID }, true, AllocationToRHRButtonURL, AllocationToSISAMCButtonURL);
+        }
+
         public void SendEmail(String subject, string body, List<string> recipients, List<string> ccEmails, bool isBodyHtml)
         {
             try
@@ -488,6 +499,19 @@ namespace OfficeSpace.Services
             addButtons.AppendFormat("<button>&nbsp;<a href=\"" + approveButtonUrl + "\" style=\"color:#4CAF50;border-radius:5px;padding:15px 30px;display:inline-block;font-size:17px;text-decoration:none;font-family:sans-serif;\">Initiate Request</a></button>&nbsp;&nbsp;");
             addButtons.AppendFormat("<button>&nbsp;<a href=\"" + disapproveButtonUrl + "\" style=\"color:#f44336;border-radius:5px;padding:15px 30px;display:inline-block;font-size:17px;text-decoration:none;font-family:sans-serif;\">Reject Request</a></button>&nbsp;&nbsp;");
             addButtons.AppendFormat("<button>&nbsp;<a href=\"" + ReviewButtonUrl + "\" style=\"color:#4CAF50;border-radius:5px;padding:15px 30px;display:inline-block;font-size:17px;text-decoration:none;font-family:sans-serif;\">Review Request</a></button>");
+            addButtons.AppendFormat("</body></html>");
+            body = body.Replace("</body></html>", addButtons.ToString());
+
+            SendEmail(subject, body, recipients, null, isBodyHtml);
+        }
+
+        public void SendEmailWithButtonInitiate(String subject, string body, List<string> recipients, bool isBodyHtml, string AllocationToRHRButtonURL, string AllocationToSISAMCButtonURL)
+        {
+            StringBuilder addButtons = new StringBuilder();
+            addButtons.AppendFormat("<br><br>");
+            addButtons.AppendFormat("<button>&nbsp;<a href=\"" + AllocationToRHRButtonURL + "\" style=\"color:#4CAF50;border-radius:5px;padding:15px 30px;display:inline-block;font-size:17px;text-decoration:none;font-family:sans-serif;\">Allocate to RHR</a></button>&nbsp;&nbsp;");
+            addButtons.AppendFormat("<button>&nbsp;<a href=\"" + AllocationToSISAMCButtonURL + "\" style=\"color:#f44336;border-radius:5px;padding:15px 30px;display:inline-block;font-size:17px;text-decoration:none;font-family:sans-serif;\">Allocate to SIS AMC</a></button>&nbsp;&nbsp;");
+           
             addButtons.AppendFormat("</body></html>");
             body = body.Replace("</body></html>", addButtons.ToString());
 
@@ -868,6 +892,62 @@ namespace OfficeSpace.Services
 
             return bodyText.ToString();
         }
+
+        private string GetMailBodyInitiate(RequestModel model)
+        {
+
+            StringBuilder bodyText = new StringBuilder(string.Empty);
+            bodyText.AppendFormat("<html><body>");
+            bodyText.AppendFormat("<p>Dear Sir,</p>");
+            bodyText.AppendFormat("<p>New request has been initiated by the President. Please find the details below:</p>");
+            bodyText.AppendFormat("<table border = " + 1 + " cellpadding = " + 0 + " cellspacing = " + 0 + " width = " + 1000 + " >");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td width = " + 300 + ">Company Name : " + model.Company + " </td><td width = " + 300 + ">Request Type : " + "Relocation " + "</td><td width = " + 300 + ">Bussinss Type : " + model.BuisnessType + " </td><td width = " + 300 + ">Allocation Type : " + model.AllocationType + "</td> </tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td width = " + 300 + ">City : " + model.City + "</td><td width = " + 300 + ">Date from which property required : " + model.DateFromWhich + "</td><td width = " + 300 + ">Property Type : " + model.Fitouts + "</td><td width = " + 300 + "></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td width = " + 300 + ">Creation Date  : " + System.DateTime.Today.ToShortDateString() + "</td><td width = " + 300 + ">Created By Name : " + model.Name + "</td><td width = " + 300 + ">Created By Email : " + model.Email + "</td><td width = " + 300 + ">Created By Phone : " + model.Mobile + "</td></tr>");
+
+            bodyText.AppendFormat("<tr bgcolor = '#08F9F5'><td>OTHER DETAILS </td><td>EXISTING </td><td>PROPOSED </td><td>OBSERVATIONS OF SIS STORE  </td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Location : </td><td> " + model.ExistingLocation + " </td><td> " + model.ProposedLocation + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Lease Start Amount (In INR) : </td><td> " + model.ExistingLeaseStartAmount + " </td><td> " + model.LeaseStartAmount + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Rental Escallation : </td><td> " + model.ExistingRentalEscallation + " </td><td> " + model.RentalEscallation + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Escallation Period : </td><td> " + model.ExistingEscallationPeriod + " </td><td> " + model.EscallationPeriod + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Lease Period : </td><td> " + model.ExistingLeasePeriod + " </td><td> " + model.LeasePeriod + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Lease Closure Date : </td><td> " + model.ExistingLeaseClosureDate + " </td><td> " + model.LeaseClosureDate + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Advance Rental (In INR) : </td><td> " + model.ExistingAdvanceRental + " </td><td> " + model.AdvanceRental + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Total Amount Hold with Owner (In INR) : </td><td> " + model.ExistingAmtHoldWithOwner + " </td><td> " + model.AmtHoldWithOwner + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Notice Period : </td><td> " + model.ExistingNoticePeriod + " </td><td> " + model.NoticePeriod + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Road Name for Signage : </td><td> " + model.Signage + " </td><td> " + model.ProposedSignage + " </td><td></td></tr>");
+
+
+
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Number of Employee : </td><td> " + model.NoOfPersons + " </td><td> " + model.ProposedNoOfPersons + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Super Built Up Area (In Sq. Ft.) : </td><td> " + model.SuperBuiltUp + " </td><td> " + model.ProposedSuperBuiltUp + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Built Up Area (In Sq. Ft.) : </td><td> " + model.BuiltUp + " </td><td> " + model.ProposedBuiltUp + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Carpet Area (In Sq. Ft.) : </td><td> " + model.CarpetArea + " </td><td> " + model.ProposedCarpetArea + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Rental Area (In Sq. Ft.) : </td><td> " + model.RentalArea + " </td><td> " + model.ProposedRentalArea + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Rental cost/square feet (In INR) : </td><td> " + model.CostPerSquareFeet + " </td><td> " + model.ProposedCostPerSquareFeet + " </td><td></td></tr>");
+            //bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Total Monthly Rental Cost (In INR) : </td><td> " + model.ExistingMonthlyCost + " </td><td> " + model.ProposedMonthlyCost + " </td><td></td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Total Monthly Rental Cost (In INR) : </td><td> " + (Convert.ToInt32(model.RentalArea) * Convert.ToInt32(model.CostPerSquareFeet)) + " </td><td> " + (Convert.ToInt32(model.ProposedRentalArea) * Convert.ToInt32(model.ProposedCostPerSquareFeet)) + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Security Deposit (In INR) : </td><td> " + model.SecurityDeposit + " </td><td> " + model.ProposedSecurityDeposit + " </td><td></td></tr>");
+
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Present Monthly Rental Cost (In INR) : </td><td> " + model.ExistingPresentMonthlyRenatlCost + " </td><td> " + model.PresentMonthlyRenatlCost + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Present Monthly Billing (In INR) : </td><td> " + model.ExistingPresentMonthlyBilling + " </td><td> " + model.PresentMonthlyBilling + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Rental Cost Percentage (In INR) : </td><td> " + model.ExistingRentalCostPer + " </td><td> " + model.RentalCostPer + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Monthly Maintenance Cost (In INR) : </td><td> " + model.ExistingMonthlyMaintenenceCost + " </td><td> " + model.MonthlyMaintenenceCost + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Average Maintenance Cost (In INR) : </td><td> " + model.ExistingAvgMaintenanceCost + " </td><td> " + model.AvgMaintenanceCost + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Monthly Electric Cost (In INR) : </td><td> " + model.ExistingmonthlyElectricCost + " </td><td> " + model.monthlyElectricCost + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Monthly All Other Costs (In INR) : </td><td> " + model.ExistingMonthlyOtherCosts + " </td><td> " + model.MonthlyOtherCosts + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Total Monthly Rental Cost (In INR) : </td><td> " + model.ExistingTotalMonthlyRenatlCost + " </td><td> " + model.TotalMonthlyRenatlCost + " </td><td></td></tr>");
+
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Number of Car Park : </td><td> " + model.ExistingCarPark + " </td><td> " + model.ProposedCarPark + " </td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Office Name : </td><td> " + model.ExistingOfficeName + " </td><td> " + model.OfficeName + " </td><td></td></tr>");
+            //bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Requested By : </td><td> " + model.RequestedBy + " </td><td> " + model.ProposedRequestedBy + " </td><td></td><td></td></tr>");
+            bodyText.AppendFormat("<tr bgcolor = '#DFF9F9'><td>Remarks :  </td><td> " + model.Remarks + " </td><td> " + model.ProposedRemarks + " </td><td></td></tr></table>");
+            //bodyText.AppendFormat("<p>New request for office space has been registered. Please find the details below:</p>");
+            bodyText.AppendFormat("</body></html>");
+
+            return bodyText.ToString();
+        }
+
 
         public void ApproveDetails(int ID, string Name)
         {
@@ -1679,6 +1759,7 @@ namespace OfficeSpace.Services
                     command.Parameters.AddWithValue("@Status", Status);
                     command.Parameters.AddWithValue("@ID", ID);
                     command.Parameters.AddWithValue("@LoggedInUser", UserName);
+              
                     SaveStatus = int.Parse(command.ExecuteScalar().ToString());
 
                 }

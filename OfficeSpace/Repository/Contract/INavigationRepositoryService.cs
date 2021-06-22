@@ -18,6 +18,8 @@ namespace OfficeSpace.Services
         int CreateRelocationRequest(RequestModel newRequest);
 
         void EmailNewRequests(RequestModel model, bool IsReqMerged, string name);
+
+        void EmailInitiateRequests(RequestModel model, bool IsReqMerged, string name);
         void EmailRelocationRequests(RequestModel model, bool IsReqMerged, string name);
 
         void ApproveDetails(int ID, string Name);

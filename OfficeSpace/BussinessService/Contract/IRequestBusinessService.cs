@@ -47,5 +47,7 @@ namespace OfficeSpace.BussinessService
         void SubmitClosureRequests(RequestModel Model);
         List<string> GetStatus(string Username);
         void UploadLeaseDocument(int ID, string FileName);
+
+        void EmailInitiateRequests(RequestModel model, bool IsReqMerged, string name);
     }
 }

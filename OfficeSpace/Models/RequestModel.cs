@@ -235,6 +235,8 @@ namespace OfficeSpace.Models
 
         public string Status { get; set; }
 
+        public string SelectedRequestId { get; set; }
+
 
 
 
